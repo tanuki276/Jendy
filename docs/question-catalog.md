@@ -32,21 +32,21 @@ pagi berarti pagi; selamat pagi adalah salam pagi.
 
 ### g2
 
-**JA → ID:** 「私の名前はユキです」は？
+**JA → ID:** 「私の名前はティニです」は？
 
-- Nama saya Yuki ✓
-- Saya dari Yuki
-- Yuki di mana
+- Nama saya Tini ✓
+- Nama saya Taro
+- Nama saya Hana
 
-nama = 名前、saya = 私。
+nama = 名前、saya = 私。Nama saya Tini で「私の名前はティニです」。
 
-**ID → JA:** Apa arti “Nama saya Yuki”?
+**ID → JA:** Apa arti “Nama saya Tini”?
 
-- 私はユキです ✓
-- 私は東京です
-- 私は学生です
+- 私の名前はティニです ✓
+- 私の名前は太郎です
+- 私の名前はハナです
 
-nama berarti nama dan saya berarti saya.
+私の名前はティニです: 私の berarti milik saya; 名前 berarti nama; は menandai topik dan です membuatnya sopan.
 
 ### g3
 
