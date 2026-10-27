@@ -1,11 +1,17 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { User } from "@supabase/supabase-js";
+import { ExpressionCard } from "@/components/ExpressionCard";
+import { WordNetwork } from "@/components/WordNetwork";
+import { PracticeLab } from "@/components/PracticeLab";
+import { shuffle } from "@/lib/practice";
+import { useModalFocus } from "@/components/useModalFocus";
 import { Icon } from "@/components/Icon";
 import { getSupabaseBrowserClient } from "@/lib/supabase";
 import { lessons, type Direction, type Lesson, targetText, sourceText } from "@/lib/learning-content";
 import {
+  createEmptyLearningState,
   dueReviews,
   gradeReview,
   loadLearningState,
@@ -20,6 +26,8 @@ import {
 type AuthMode = "signin" | "signup";
 type LessonPhase = "learn" | "quiz" | "result";
 
+const featuredLesson = lessons.find(lesson => lesson.id === "contrast-already") ?? lessons[0];
+
 const LOCAL_PROGRESS_KEY = "jendy:progress:v1";
 const LOCAL_DIRECTION_KEY = "jendy:direction:v1";
 
@@ -29,16 +37,16 @@ function directionText(direction: Direction) {
         source: "日本語",
         target: "Bahasa Indonesia",
         eyebrow: "BAHASA INDONESIA, DENGAN PENJELASAN JEPANG",
-        title: "インドネシア語を、\n理解して使えるようにする。",
-        lead: "説明を読むだけで終わらず、例文・音声・クイズ・間隔反復まで。Jendyは日本語話者向けの実戦型インドネシア語学習環境です。",
+        title: "その訳の先にある、\n「なぜ？」まで。",
+        lead: "日本語とインドネシア語の違いから、文のしくみ・語感・実際の使い方を学ぶ。語根も、助詞も、友達へのひと言も。理解して、自分の言葉に。",
         start: "今日の学習を始める",
       }
     : {
         source: "Bahasa Indonesia",
         target: "日本語",
         eyebrow: "BELAJAR BAHASA JEPANG DALAM BAHASA INDONESIA",
-        title: "Belajar bahasa Jepang,\nsampai benar-benar bisa dipakai.",
-        lead: "Bukan hanya membaca teori: pelajari contoh, dengarkan audio, kerjakan kuis, lalu ulangi dengan sistem spaced repetition.",
+        title: "Pahami bukan hanya arti,\ntetapi juga alasannya.",
+        lead: "Temukan perbedaan bahasa Jepang dan Indonesia: struktur kalimat, partikel, nuansa, dan ungkapan sehari-hari. Pahami alasannya, lalu latih penggunaannya.",
         start: "Mulai belajar hari ini",
       };
 }
@@ -92,8 +100,14 @@ export default function Home() {
   const [direction, setDirection] = useState<Direction>("ja-id");
   const [user, setUser] = useState<User | null>(null);
   const [completed, setCompleted] = useState<Set<string>>(new Set());
-  const [learning, setLearning] = useState<LearningState>(() => loadLearningState());
+  const [learning, setLearning] = useState<LearningState>(createEmptyLearningState);
 
+  const [storageReady, setStorageReady] = useState(false);
+  const [courseLevel, setCourseLevel] = useState("All");
+  const [category, setCategory] = useState("All");
+  const [search, setSearch] = useState("");
+  const [visibleCount, setVisibleCount] = useState(12);
+  const modalRef = useRef<HTMLDivElement>(null);
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
   const [lessonPhase, setLessonPhase] = useState<LessonPhase>("learn");
   const [phraseIndex, setPhraseIndex] = useState(0);
@@ -113,6 +127,13 @@ export default function Home() {
   const [authMessage, setAuthMessage] = useState("");
   const [authBusy, setAuthBusy] = useState(false);
 
+  useModalFocus(Boolean(activeLesson || authOpen), modalRef, () => { setActiveLesson(null); setAuthOpen(false); });
+  const categories = Array.from(new Set(lessons.map(lesson => lesson.category ?? "Foundation")));
+  const filteredLessons = lessons.filter(lesson => (courseLevel === "All" || lesson.level.startsWith(courseLevel)) && (category === "All" || (lesson.category ?? "Foundation") === category) && `${lesson.titleJa} ${lesson.titleId} ${lesson.grammarJa} ${lesson.grammarId}`.toLowerCase().includes(search.trim().toLowerCase()));
+  const quizChoices = useMemo(() => {
+    const question = activeLesson?.quiz[quizIndex];
+    return question ? shuffle(direction === "ja-id" ? question.choicesId : question.choicesJa) : [];
+  }, [activeLesson, quizIndex, direction]);
   const copy = directionText(direction);
   const progress = Math.round((completed.size / lessons.length) * 100);
   const accuracy = learning.stats.answered === 0 ? 0 : Math.round((learning.stats.correct / learning.stats.answered) * 100);
@@ -129,11 +150,12 @@ export default function Home() {
       // Defaults keep the app usable.
     }
     setLearning(loadLearningState());
+    setStorageReady(true);
   }, []);
 
   useEffect(() => {
-    saveLearningState(learning);
-  }, [learning]);
+    if (storageReady) saveLearningState(learning);
+  }, [learning, storageReady]);
 
   useEffect(() => {
     if (!supabase) return;
@@ -195,6 +217,7 @@ export default function Home() {
 
   function switchDirection() {
     const next = direction === "ja-id" ? "id-ja" : "ja-id";
+    setActiveLesson(null);
     setDirection(next);
     setReviewIndex(0);
     setReviewRevealed(false);
@@ -270,7 +293,7 @@ export default function Home() {
       return;
     }
 
-    const finalCorrect = quizScore + (answerCorrect ? 0 : 0);
+    const finalCorrect = quizScore;
     const score = Math.round((finalCorrect / activeLesson.quiz.length) * 100);
     setLessonPhase("result");
 
@@ -278,7 +301,7 @@ export default function Home() {
       const nextCompleted = new Set([...completed, activeLesson.id]);
       setCompleted(nextCompleted);
       writeLocalProgress(direction, nextCompleted);
-      setLearning((current) => recordLessonCompletion(current, activeLesson.id, score));
+      setLearning((current) => recordLessonCompletion(current, `${direction}:${activeLesson.id}`, score));
 
       if (supabase && user) {
         void withTimeout(
@@ -366,7 +389,7 @@ export default function Home() {
     setUser(null);
   }
 
-  const lessonScore = activeLesson ? learning.lessonScores[activeLesson.id] ?? 0 : 0;
+  const lessonScore = activeLesson ? Math.round(quizScore / activeLesson.quiz.length * 100) : 0;
 
   return (
     <main>
@@ -375,6 +398,8 @@ export default function Home() {
         <nav className="nav-links" aria-label="Main navigation">
           <a href="#dashboard">{direction === "ja-id" ? "ダッシュボード" : "Dasbor"}</a>
           <a href="#curriculum">{direction === "ja-id" ? "レッスン" : "Pelajaran"}</a>
+          <a href="#practice">{direction === "ja-id" ? "練習" : "Latihan"}</a>
+          <a href="#dictionary">{direction === "ja-id" ? "語族辞書" : "Keluarga kata"}</a>
           <a href="#review">{direction === "ja-id" ? "復習" : "Ulasan"}</a>
         </nav>
         <div className="header-actions">
@@ -389,7 +414,7 @@ export default function Home() {
           <h1>{copy.title.split("\n").map((line, index) => <span key={line}>{line}{index === 0 && <br />}</span>)}</h1>
           <p>{copy.lead}</p>
           <div className="hero-actions">
-            <a className="primary-button" href="#dashboard">{copy.start}<Icon name="arrow" size={18} /></a>
+            <a className="primary-button" href="#curriculum">{copy.start}<Icon name="arrow" size={18} /></a>
             <a className="text-link" href="#curriculum">{direction === "ja-id" ? "カリキュラムを見る" : "Lihat kurikulum"}</a>
           </div>
           <div className="hero-proof">
@@ -402,15 +427,11 @@ export default function Home() {
         <div className="hero-card-wrap">
           <div className="flag-ribbon"><span className="flag-red" /><span className="flag-white" /></div>
           <div className="hero-card">
-            <div className="card-topline"><span>ACTIVE LEARNING</span><Icon name="book" size={19} /></div>
-            <p className="prompt-label">{direction === "ja-id" ? "今日のおすすめ" : "Rekomendasi hari ini"}</p>
-            <p className="prompt-main">{reviews.length > 0 ? (direction === "ja-id" ? "まず復習から。" : "Mulai dari ulasan.") : (direction === "ja-id" ? "1レッスン進めよう。" : "Selesaikan satu pelajaran.")}</p>
-            <div className="answer-box">
-              <span className="answer-language">{reviews.length > 0 ? "SRS" : "A1"}</span>
-              <div><strong>{reviews.length > 0 ? `${reviews.length} ${direction === "ja-id" ? "件の復習" : "ulasan"}` : (direction === "ja-id" ? "あいさつと自己紹介" : "Salam & perkenalan")}</strong><small>{direction === "ja-id" ? "ローカル保存・クラウド同期対応" : "Local-first dengan sinkronisasi cloud"}</small></div>
-              <a href={reviews.length > 0 ? "#review" : "#curriculum"} aria-label="開始"><Icon name="arrow" size={20} /></a>
-            </div>
-            <div className="grammar-note"><Icon name="spark" size={18} /><p>{direction === "ja-id" ? <>Jendyは<strong>正答率・XP・復習間隔</strong>を端末内で保持します。Supabase停止中でも学習ループは止まりません。</> : <>Jendy menyimpan <strong>akurasi, XP, dan jadwal ulasan</strong> di perangkat. Belajar tetap berjalan saat Supabase offline.</>}</p></div>
+            <div className="card-topline"><span>LEARN THE WHY</span><Icon name="book" size={19} /></div>
+            <p className="prompt-label">{direction === "ja-id" ? "もう・まだを、構造から理解する" : "Pahami もう・まだ lewat struktur"}</p>
+            <p className="prompt-main" lang={direction === "ja-id" ? "id" : "ja"}>{direction === "ja-id" ? "Saya sudah makan" : "私はもう食べました"}</p>
+            <p>{direction === "ja-id" ? "私はもう食べました" : "Saya sudah makan"}</p>
+            <ExpressionCard key={direction} direction={direction} phrase={featuredLesson.phrases[0]} onSave={() => setLearning(current => upsertReviewItem(current, { lessonId: featuredLesson.id, phraseIndex: 0, direction }))} />
           </div>
         </div>
       </section>
@@ -419,6 +440,9 @@ export default function Home() {
         <div><Icon name="globe" size={22} /><span>{direction === "ja-id" ? "現在の学習方向" : "Arah belajar"}</span></div>
         <button onClick={switchDirection}><strong>{copy.source}</strong><Icon name="arrow" size={18} /><strong>{copy.target}</strong><span className="switch-hint"><Icon name="swap" size={15} />{direction === "ja-id" ? "逆方向へ" : "Balik arah"}</span></button>
       </section>
+
+      <PracticeLab key={direction} direction={direction} onAnswer={(correct, lessonId, phraseIndex) => setLearning(current => upsertReviewItem(recordAnswer(current, correct), { lessonId, phraseIndex, direction }))} />
+      <WordNetwork direction={direction} />
 
       <section className="dashboard-section" id="dashboard">
         <div className="section-kicker">LEARNING DASHBOARD</div>
@@ -436,11 +460,17 @@ export default function Home() {
       </section>
 
       <section className="curriculum-section" id="curriculum">
-        <div className="curriculum-header"><div><div className="section-kicker">STRUCTURED CURRICULUM</div><h2>{direction === "ja-id" ? "基礎6ユニット" : "6 unit dasar"}</h2></div><p className="curriculum-note">{direction === "ja-id" ? "各レッスン：解説 → 3例文 → 3問クイズ → SRS登録" : "Setiap pelajaran: teori → 3 contoh → 3 kuis → masuk SRS"}</p></div>
+        <div className="curriculum-header"><div><div className="section-kicker">STRUCTURED CURRICULUM</div><h2>{direction === "ja-id" ? `${lessons.length}の学び、2つの視点。` : `${lessons.length} pelajaran, dua sudut pandang.`}</h2></div><p className="curriculum-note">{direction === "ja-id" ? "A1 30 / A2 12 / B1 6 · 文の理解 → 実践 → 復習" : "A1 30 / A2 12 / B1 6 · Pahami → latih → ulangi"}</p></div>
+        <div className="course-filters">
+          <label>{direction === "ja-id" ? "教材を検索" : "Cari pelajaran"}<input type="search" value={search} onChange={e => { setSearch(e.target.value); setVisibleCount(12); }} placeholder={direction === "ja-id" ? "助詞、チャット、baca…" : "partikel, chat, baca…"} /></label>
+          <label>{direction === "ja-id" ? "レベル" : "Tingkat"}<select value={courseLevel} onChange={e => { setCourseLevel(e.target.value); setVisibleCount(12); }}><option value="All">All</option>{["A1", "A2", "B1"].map(value => <option key={value}>{value}</option>)}</select></label>
+          <label>{direction === "ja-id" ? "テーマ" : "Tema"}<select value={category} onChange={e => { setCategory(e.target.value); setVisibleCount(12); }}><option value="All">All</option>{categories.map(value => <option key={value}>{value}</option>)}</select></label>
+          <span role="status">{filteredLessons.length} {direction === "ja-id" ? "レッスン" : "pelajaran"}</span>
+        </div>
         <div className="lesson-grid">
-          {lessons.map((lesson) => {
+          {filteredLessons.slice(0, visibleCount).map((lesson) => {
             const isDone = completed.has(lesson.id);
-            const score = learning.lessonScores[lesson.id];
+            const score = learning.lessonScores[`${direction}:${lesson.id}`] ?? (direction === "ja-id" ? learning.lessonScores[lesson.id] : undefined);
             return <article className={`lesson-card ${isDone ? "done" : ""}`} key={lesson.id}>
               <div className="lesson-meta"><span>{lesson.level}</span><span>{lesson.minutes} min</span></div>
               <h3>{direction === "ja-id" ? lesson.titleJa : lesson.titleId}</h3>
@@ -453,40 +483,43 @@ export default function Home() {
         </div>
       </section>
 
+      {filteredLessons.length > visibleCount && <div className="more-lessons"><button className="outline-button" onClick={() => setVisibleCount(count => count + 12)}>{direction === "ja-id" ? "さらに12レッスンを見る" : "Lihat 12 pelajaran lagi"} ↓</button></div>}
+      {!filteredLessons.length && <p className="no-lessons" role="status">{direction === "ja-id" ? "条件に合う教材がありません。検索や絞り込みを変更してください。" : "Tidak ada pelajaran yang cocok. Ubah pencarian atau filter."}</p>}
       <section className="review-section" id="review">
         <div className="review-copy"><div className="section-kicker">SPACED REPETITION</div><h2>{direction === "ja-id" ? "忘れる前に、もう一度。" : "Ulangi sebelum lupa."}</h2><p>{direction === "ja-id" ? "Again / Hard / Good / Easy の評価から次回復習日を自動調整します。" : "Nilai Again / Hard / Good / Easy akan mengatur jadwal ulasan berikutnya."}</p></div>
         <div className="review-card">
           {!currentReview || !currentReviewPhrase ? <div className="review-empty"><Icon name="check" size={28} /><strong>{direction === "ja-id" ? "今日の復習は完了" : "Ulasan hari ini selesai"}</strong><span>{direction === "ja-id" ? "レッスンを進めると新しい復習カードが追加されます。" : "Selesaikan pelajaran untuk menambah kartu ulasan."}</span></div> : <>
             <div className="review-top"><span>SRS · {reviews.length} DUE</span><button onClick={() => speak(targetText(direction, currentReviewPhrase))}><Icon name="volume" size={19} /></button></div>
             <div className="review-question"><small>{direction === "ja-id" ? "この表現を思い出してください" : "Ingat ungkapan ini"}</small><strong>{sourceText(direction, currentReviewPhrase)}</strong></div>
-            {!reviewRevealed ? <button className="reveal-button" onClick={() => setReviewRevealed(true)}>{direction === "ja-id" ? "答えを見る" : "Lihat jawaban"}</button> : <div className="review-answer"><strong>{targetText(direction, currentReviewPhrase)}</strong><p>{direction === "ja-id" ? currentReviewPhrase.noteJa : currentReviewPhrase.noteId}</p><div className="grade-grid">
-              {(["again", "hard", "good", "easy"] as ReviewGrade[]).map((grade) => <button key={grade} onClick={() => handleReviewGrade(grade)}><b>{grade === "again" ? (direction === "ja-id" ? "もう一度" : "Ulangi") : grade === "hard" ? (direction === "ja-id" ? "難しい" : "Sulit") : grade === "good" ? (direction === "ja-id" ? "できた" : "Bagus") : (direction === "ja-id" ? "簡単" : "Mudah")}</b><span>{grade === "again" ? "10m" : grade === "hard" ? "1d" : grade === "good" ? "3d+" : "7d+"}</span></button>)}
+            {!reviewRevealed ? <button className="reveal-button" onClick={() => setReviewRevealed(true)}>{direction === "ja-id" ? "答えを見る" : "Lihat jawaban"}</button> : <div className="review-answer"><strong>{targetText(direction, currentReviewPhrase)}</strong><ExpressionCard key={currentReview.key} phrase={currentReviewPhrase} direction={direction} /><div className="grade-grid">
+              {(["again", "hard", "good", "easy"] as ReviewGrade[]).map((grade) => <button key={grade} onClick={() => handleReviewGrade(grade)}><b>{grade === "again" ? (direction === "ja-id" ? "もう一度" : "Ulangi") : grade === "hard" ? (direction === "ja-id" ? "難しい" : "Sulit") : grade === "good" ? (direction === "ja-id" ? "できた" : "Bagus") : (direction === "ja-id" ? "簡単" : "Mudah")}</b><span>{grade === "again" ? "10m" : grade === "hard" ? "1d" : grade === "good" ? "1d+" : "3d+"}</span></button>)}
             </div></div>}
           </>}
         </div>
       </section>
 
-      <section className="cta-section"><div className="cta-mark"><span /><span /></div><div><p>LOCAL-FIRST LEARNING ENGINE</p><h2>{direction === "ja-id" ? "クラウドが止まっても、学習は止めない。" : "Cloud boleh berhenti, belajar tetap lanjut."}</h2></div><a className="light-button" href="#curriculum">{direction === "ja-id" ? "次のレッスンへ" : "Pelajaran berikutnya"}<Icon name="arrow" size={18} /></a></section>
+      <section className="cta-section"><div className="cta-mark"><span /><span /></div><div><p>LEARN THE LANGUAGE BETWEEN THE LANGUAGES.</p><h2>{direction === "ja-id" ? "訳せるだけでなく、理由まで分かる。" : "Pahami arti, alasan, dan penggunaannya."}</h2></div><a className="light-button" href="#curriculum">{direction === "ja-id" ? "次のレッスンへ" : "Pelajaran berikutnya"}<Icon name="arrow" size={18} /></a></section>
 
-      <footer><a href="#top" className="brand footer-brand"><span className="brand-mark"><span /></span><span>Jendy</span></a><p>Japanese ↔ Bahasa Indonesia · Active Learning · SRS · Local-first</p><span>© 2026 Jendy</span></footer>
+      <footer><a href="#top" className="brand footer-brand"><span className="brand-mark"><span /></span><span>Jendy</span></a><p>Japanese ↔ Bahasa Indonesia · Understand the why</p><span>© 2026 Jendy</span></footer>
 
       {activeLesson && <div className="modal-backdrop lesson-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeLesson(); }}>
-        <div className="lesson-player" role="dialog" aria-modal="true">
-          <button className="modal-close" onClick={closeLesson}>×</button>
-          <div className="player-header"><div><span>{activeLesson.level}</span><h2>{direction === "ja-id" ? activeLesson.titleJa : activeLesson.titleId}</h2></div><div className="phase-pills"><span className={lessonPhase === "learn" ? "active" : ""}>01 Learn</span><span className={lessonPhase === "quiz" ? "active" : ""}>02 Quiz</span><span className={lessonPhase === "result" ? "active" : ""}>03 Result</span></div></div>
+        <div ref={modalRef} className="lesson-player" role="dialog" aria-modal="true" aria-labelledby="lesson-title" tabIndex={-1}>
+          <button className="modal-close" aria-label={direction === "ja-id" ? "閉じる" : "Tutup"} onClick={closeLesson}>×</button>
+          <div className="player-header"><div><span>{activeLesson.level}</span><h2 id="lesson-title">{direction === "ja-id" ? activeLesson.titleJa : activeLesson.titleId}</h2></div><div className="phase-pills"><span className={lessonPhase === "learn" ? "active" : ""}>01 Learn</span><span className={lessonPhase === "quiz" ? "active" : ""}>02 Quiz</span><span className={lessonPhase === "result" ? "active" : ""}>03 Result</span></div></div>
 
           {lessonPhase === "learn" && <div className="learn-stage">
             <div className="grammar-panel"><div className="section-kicker">GRAMMAR MAP</div><p>{direction === "ja-id" ? activeLesson.grammarJa : activeLesson.grammarId}</p></div>
-            <div className="phrase-player"><div className="phrase-progress"><span>{phraseIndex + 1} / {activeLesson.phrases.length}</span><div><i style={{ width: `${((phraseIndex + 1) / activeLesson.phrases.length) * 100}%` }} /></div></div><small>{sourceText(direction, activeLesson.phrases[phraseIndex])}</small><strong>{targetText(direction, activeLesson.phrases[phraseIndex])}</strong>{activeLesson.phrases[phraseIndex].reading && direction === "ja-id" && <em>{activeLesson.phrases[phraseIndex].reading}</em>}<p>{direction === "ja-id" ? activeLesson.phrases[phraseIndex].noteJa : activeLesson.phrases[phraseIndex].noteId}</p><div className="player-actions"><button className="audio-button" onClick={() => speak(targetText(direction, activeLesson.phrases[phraseIndex]))}><Icon name="volume" size={19} />{direction === "ja-id" ? "発音" : "Audio"}</button><button className="next-button" onClick={nextPhrase}>{phraseIndex === activeLesson.phrases.length - 1 ? (direction === "ja-id" ? "クイズへ" : "Ke kuis") : (direction === "ja-id" ? "次へ" : "Berikutnya")}<Icon name="arrow" size={18} /></button></div></div>
+            <div className="phrase-player"><div className="phrase-progress"><span>{phraseIndex + 1} / {activeLesson.phrases.length}</span><div><i style={{ width: `${((phraseIndex + 1) / activeLesson.phrases.length) * 100}%` }} /></div></div><small>{sourceText(direction, activeLesson.phrases[phraseIndex])}</small><strong>{targetText(direction, activeLesson.phrases[phraseIndex])}</strong>{activeLesson.phrases[phraseIndex].reading && direction === "ja-id" && <em>{activeLesson.phrases[phraseIndex].reading}</em>}<p>{direction === "ja-id" ? activeLesson.phrases[phraseIndex].noteJa : activeLesson.phrases[phraseIndex].noteId}</p><ExpressionCard key={`${activeLesson.id}:${phraseIndex}:${direction}`} phrase={activeLesson.phrases[phraseIndex]} direction={direction} onSave={() => setLearning(current => upsertReviewItem(current, { lessonId: activeLesson.id, phraseIndex, direction }))} /><div className="player-actions"><button className="audio-button" onClick={() => speak(targetText(direction, activeLesson.phrases[phraseIndex]))}><Icon name="volume" size={19} />{direction === "ja-id" ? "発音" : "Audio"}</button><button className="next-button" onClick={nextPhrase}>{phraseIndex === activeLesson.phrases.length - 1 ? (direction === "ja-id" ? "クイズへ" : "Ke kuis") : (direction === "ja-id" ? "次へ" : "Berikutnya")}<Icon name="arrow" size={18} /></button></div></div>
           </div>}
 
-          {lessonPhase === "quiz" && (() => { const question = activeLesson.quiz[quizIndex]; const choices = direction === "ja-id" ? question.choicesId : question.choicesJa; const expected = direction === "ja-id" ? question.answerId : question.answerJa; return <div className="quiz-stage"><div className="quiz-progress"><span>QUESTION {quizIndex + 1} / {activeLesson.quiz.length}</span><strong>{quizScore} pts</strong></div><h3>{direction === "ja-id" ? question.promptJa : question.promptId}</h3><div className="choice-grid">{choices.map((choice) => { const state = selectedAnswer ? choice === expected ? "correct" : choice === selectedAnswer ? "wrong" : "muted" : ""; return <button key={choice} className={state} disabled={Boolean(selectedAnswer)} onClick={() => answerQuestion(choice)}>{choice}</button>; })}</div>{selectedAnswer && <div className={`quiz-feedback ${answerCorrect ? "correct" : "wrong"}`}><strong>{answerCorrect ? (direction === "ja-id" ? "正解" : "Benar") : (direction === "ja-id" ? "もう一歩" : "Belum tepat")}</strong><p>{direction === "ja-id" ? question.explanationJa : question.explanationId}</p><button className="next-button" onClick={nextQuestion}>{quizIndex === activeLesson.quiz.length - 1 ? (direction === "ja-id" ? "結果を見る" : "Lihat hasil") : (direction === "ja-id" ? "次の問題" : "Soal berikutnya")}<Icon name="arrow" size={18} /></button></div>}</div>; })()}
+          {lessonPhase === "quiz" && (() => { const question = activeLesson.quiz[quizIndex]; const choices = quizChoices; const expected = direction === "ja-id" ? question.answerId : question.answerJa; return <div className="quiz-stage"><div className="quiz-progress"><span>QUESTION {quizIndex + 1} / {activeLesson.quiz.length}</span><strong>{quizScore} pts</strong></div><h3>{direction === "ja-id" ? question.promptJa : question.promptId}</h3><div className="choice-grid">{choices.map((choice) => { const state = selectedAnswer ? choice === expected ? "correct" : choice === selectedAnswer ? "wrong" : "muted" : ""; return <button key={choice} className={state} disabled={Boolean(selectedAnswer)} onClick={() => answerQuestion(choice)}>{choice}</button>; })}</div>{selectedAnswer && <div className={`quiz-feedback ${answerCorrect ? "correct" : "wrong"}`}><strong>{answerCorrect ? (direction === "ja-id" ? "正解" : "Benar") : (direction === "ja-id" ? "もう一歩" : "Belum tepat")}</strong><p>{direction === "ja-id" ? question.explanationJa : question.explanationId}</p><button className="next-button" onClick={nextQuestion}>{quizIndex === activeLesson.quiz.length - 1 ? (direction === "ja-id" ? "結果を見る" : "Lihat hasil") : (direction === "ja-id" ? "次の問題" : "Soal berikutnya")}<Icon name="arrow" size={18} /></button></div>}</div>; })()}
 
           {lessonPhase === "result" && <div className="result-stage"><div className={`result-ring ${lessonScore >= 67 ? "pass" : ""}`}><strong>{lessonScore}%</strong><span>{lessonScore >= 67 ? "PASS" : "RETRY"}</span></div><h3>{lessonScore >= 67 ? (direction === "ja-id" ? "レッスン完了" : "Pelajaran selesai") : (direction === "ja-id" ? "もう一度挑戦" : "Coba lagi")}</h3><p>{lessonScore >= 67 ? (direction === "ja-id" ? "例文は復習キューに入りました。忘却曲線に合わせて再登場します。" : "Contoh sudah masuk antrean SRS dan akan muncul lagi sesuai jadwal ulasan.") : (direction === "ja-id" ? "67%以上で完了です。間違えたポイントを確認して再挑戦しましょう。" : "Butuh 67% untuk lulus. Tinjau lalu coba lagi.")}</p><div className="result-actions"><button className="outline-button" onClick={retryLessonQuiz}>{direction === "ja-id" ? "クイズ再挑戦" : "Ulangi kuis"}</button><button className="next-button" onClick={closeLesson}>{direction === "ja-id" ? "終了" : "Selesai"}</button></div></div>}
         </div>
       </div>}
 
-      {authOpen && <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setAuthOpen(false); }}><div className="auth-modal" role="dialog" aria-modal="true"><button className="modal-close" onClick={() => setAuthOpen(false)}>×</button><div className="auth-icon"><Icon name={authMode === "signin" ? "login" : "user"} size={24} /></div><p className="modal-kicker">OPTIONAL CLOUD SYNC</p><h2>{authMode === "signin" ? (direction === "ja-id" ? "クラウド同期" : "Sinkronisasi cloud") : (direction === "ja-id" ? "同期アカウント作成" : "Buat akun sinkronisasi")}</h2><p className="modal-description">{direction === "ja-id" ? "ログインは任意です。学習データはまずこの端末に保存されます。" : "Login bersifat opsional. Data belajar disimpan di perangkat terlebih dahulu."}</p><form onSubmit={submitAuth}>{authMode === "signup" && <label>{direction === "ja-id" ? "表示名" : "Nama"}<input value={displayName} onChange={(e) => setDisplayName(e.target.value)} /></label>}<label>Email<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></label><label>{direction === "ja-id" ? "パスワード" : "Kata sandi"}<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} minLength={6} required /></label>{authMessage && <div className="auth-message">{authMessage}</div>}<button className="auth-submit" disabled={authBusy}>{authBusy ? "…" : authMode === "signin" ? (direction === "ja-id" ? "ログイン" : "Masuk") : (direction === "ja-id" ? "作成" : "Daftar")}<Icon name="arrow" size={18} /></button></form><button className="mode-switch" onClick={() => setAuthMode(authMode === "signin" ? "signup" : "signin")}>{authMode === "signin" ? (direction === "ja-id" ? "アカウントを作成" : "Buat akun") : (direction === "ja-id" ? "ログインへ" : "Ke login")}</button></div></div>}
+      {authOpen && <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setAuthOpen(false); }}><div ref={modalRef} className="auth-modal" role="dialog" aria-modal="true" aria-label={direction === "ja-id" ? "クラウド同期" : "Sinkronisasi cloud"} tabIndex={-1}><button className="modal-close" aria-label={direction === "ja-id" ? "閉じる" : "Tutup"} onClick={() => setAuthOpen(false)}>×</button><div className="auth-icon"><Icon name={authMode === "signin" ? "login" : "user"} size={24} /></div><p className="modal-kicker">OPTIONAL CLOUD SYNC</p><h2>{authMode === "signin" ? (direction === "ja-id" ? "クラウド同期" : "Sinkronisasi cloud") : (direction === "ja-id" ? "同期アカウント作成" : "Buat akun sinkronisasi")}</h2><p className="modal-description">{direction === "ja-id" ? "ログインは任意です。学習データはまずこの端末に保存されます。" : "Login bersifat opsional. Data belajar disimpan di perangkat terlebih dahulu."}</p><form onSubmit={submitAuth}>{authMode === "signup" && <label>{direction === "ja-id" ? "表示名" : "Nama"}<input value={displayName} onChange={(e) => setDisplayName(e.target.value)} /></label>}<label>Email<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></label><label>{direction === "ja-id" ? "パスワード" : "Kata sandi"}<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} minLength={6} required /></label>{authMessage && <div className="auth-message">{authMessage}</div>}<button className="auth-submit" disabled={authBusy}>{authBusy ? "…" : authMode === "signin" ? (direction === "ja-id" ? "ログイン" : "Masuk") : (direction === "ja-id" ? "作成" : "Daftar")}<Icon name="arrow" size={18} /></button></form><button className="mode-switch" onClick={() => setAuthMode(authMode === "signin" ? "signup" : "signin")}>{authMode === "signin" ? (direction === "ja-id" ? "アカウントを作成" : "Buat akun") : (direction === "ja-id" ? "ログインへ" : "Ke login")}</button></div></div>}
     </main>
   );
 }
+
