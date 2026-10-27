@@ -1,0 +1,40 @@
+/* Shared learning surfaces: roles use text labels as well as color. */
+.practice-section,.network-section { max-width:1180px;margin:0 auto;padding:70px 0;border-top:1px solid var(--line);scroll-margin-top:100px; }
+.practice-section h2,.network-section h2 {font-size:clamp(27px,4vw,42px);letter-spacing:-.04em;margin:12px 0 16px;}
+.practice-section>p,.network-section>p{color:var(--muted);line-height:1.8;}
+.expression-card {text-align:left;font-size:14px;margin:20px 0;}
+.expression-card p {font-size:14px!important;line-height:1.8!important;margin:10px 0!important;}
+.insight-label {font-size:11px;font-weight:750;letter-spacing:.08em;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.insight-label small {font-weight:400;letter-spacing:0;color:var(--muted);}
+.anatomy-tokens {display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+.token {border:1px solid transparent;border-radius:9px;padding:9px 12px;cursor:pointer;text-align:left;font-size:18px;font-weight:600;min-width:0;}
+.token small {display:block;font-size:10px;font-weight:500;margin-top:5px;}
+.token[aria-pressed=true] {outline:2px solid var(--ink);outline-offset:2px;}
+.role-subject {background:#e2ebf8;color:#234e79;}.role-verb,.role-predicate {background:#dfeddf;color:#255934;}.role-object {background:#fce9cb;color:#744d11;}.role-particle {background:#eee2fa;color:#64408a;}.role-modifier {background:#f5dfe1;color:#823543;}.role-affix {background:#d8eeeb;color:#225d56;}
+.token-detail {min-height:3em;color:var(--muted);}
+.literal-box {border-left:3px solid var(--green);padding:10px 15px;background:#f2f3ed;border-radius:0 8px 8px 0;}
+.literal-box>span {font-size:11px;font-weight:700;}.literal-box small {font-size:11px;color:var(--muted);line-height:1.6;display:block;}
+.register-note {color:var(--muted);}.register-note b {color:var(--ink);}
+.why-box {border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:13px 0;}
+.why-box summary {cursor:pointer;font-weight:650;line-height:1.6;}.why-box summary span {float:right;font-size:11px;border:1px solid var(--line);border-radius:20px;padding:2px 8px;}
+.save-expression {background:none;border:0;color:var(--green);padding:14px 0 0;font-weight:650;cursor:pointer;}
+.practice-controls,.course-filters {display:flex;flex-wrap:wrap;gap:14px;align-items:end;margin:24px 0;}
+.practice-controls label,.course-filters label,.dictionary-search {display:flex;flex-direction:column;gap:8px;font-size:12px;font-weight:650;}
+select,input[type=search],.recall-form textarea {background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:12px 14px;color:var(--ink);font:inherit;}
+.course-filters label:first-child {flex:1;min-width:180px;}.course-filters>span{font-size:12px;padding:12px 0;}
+.practice-controls .outline-button {padding:14px 20px;}
+.practice-player {background:var(--surface);border:1px solid var(--line);padding:30px;border-radius:18px;margin:24px 0;}
+.practice-top {display:flex;justify-content:space-between;align-items:center;gap:15px;font-size:12px;}.practice-top .outline-button{padding:8px 12px;}
+.practice-player h3 {font-size:22px;line-height:1.7;}.practice-feedback {border-top:1px solid var(--line);padding-top:24px;margin-top:24px;}.practice-feedback>p{line-height:1.8;}.model-answer{font-size:24px;font-weight:700;overflow-wrap:anywhere;}
+.recall-form label{display:flex;flex-direction:column;gap:10px;}.recall-form textarea{width:100%;min-height:100px;margin-bottom:15px;resize:vertical;}
+.session-summary{padding:24px;background:#e9efe7;border-radius:12px;}.session-summary strong{font-size:30px;}
+.weakness-list{padding:22px 26px;background:var(--cream);border-radius:12px;margin-top:24px;}.weakness-list>p{font-size:12px;color:var(--muted);line-height:1.8;}.weakness-list>div{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-top:1px solid #d0cbbb;font-size:14px;}.weakness-list strong{white-space:nowrap;}.weakness-list small{font-weight:400;}
+.dictionary-search{max-width:520px;margin:26px 0 20px;}.family-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;}.family-tabs button{border:1px solid var(--line);background:var(--surface);padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:700;}.family-tabs button small{display:block;color:var(--muted);font-size:11px;font-weight:400;margin-top:5px;}.family-tabs button[aria-pressed=true]{background:var(--dark);color:white;border-color:var(--dark);}.family-tabs button[aria-pressed=true] small{color:#c8d8ce;}
+.family-map{display:grid;grid-template-columns:190px 1fr;gap:24px;align-items:center;}.family-root{display:flex;flex-direction:column;padding:26px;background:var(--green);color:white;border-radius:14px;text-align:center;}.family-root small{font-size:10px;letter-spacing:.12em;}.family-root strong{font-size:34px;margin:12px 0;}.family-root span{font-size:13px;}.family-branches{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}.family-branches article{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--green);padding:18px;border-radius:8px;}.family-branches strong{font-size:18px;overflow-wrap:anywhere;}.family-branches p{font-size:12px;line-height:1.7;color:var(--muted);margin-bottom:0;}.family-note{grid-column:1/-1;font-size:13px;color:var(--muted);line-height:1.8;}
+.more-lessons,.no-lessons{max-width:1180px;margin:0 auto 40px;text-align:center;}.more-lessons button{padding:15px 30px;}
+button:disabled{cursor:default;opacity:.65;}button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #976200;outline-offset:4px;}
+#curriculum,#dictionary,#practice,#review,#dashboard{scroll-margin-top:100px;}
+.hero-card .prompt-main{font-size:26px;}.hero-card .expression-card{margin-bottom:0;}.phrase-player>.expression-card strong{font-size:inherit;}.phrase-player>.expression-card small{font-size:11px;}
+@media(max-width:1230px){.practice-section,.network-section{margin-left:24px;margin-right:24px;}.nav-links{gap:16px;font-size:12px;}}
+@media(max-width:760px){.practice-section,.network-section{padding:45px 0;margin-left:20px;margin-right:20px;}.family-map{grid-template-columns:1fr;gap:14px;}.family-root{padding:18px;}.family-branches{grid-template-columns:repeat(2,minmax(0,1fr));}.practice-player{padding:20px;}.practice-controls{align-items:stretch;}.practice-controls>*{flex:1 1 140px;}.practice-controls .primary-button{padding:14px;}.token{font-size:16px;padding:8px;}.course-filters{gap:10px;}.course-filters label{flex:1;min-width:0;}.course-filters select{max-width:100%;}.weakness-list{padding:20px;}.hero-card-wrap{min-width:0;}.family-branches article{padding:14px;}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}*,*::before,*::after{animation:none!important;transition:none!important;}}

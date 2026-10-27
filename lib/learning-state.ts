@@ -44,6 +44,10 @@ const initialState: LearningState = {
   lessonScores: {},
 };
 
+export function createEmptyLearningState(): LearningState {
+  return { stats: { ...initialState.stats }, reviews: [], lessonScores: {} };
+}
+
 function localDateKey(date = new Date()) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
@@ -207,3 +211,4 @@ export function dueReviews(state: LearningState, direction?: Direction) {
     return new Date(item.dueAt).getTime() <= now;
   });
 }
+

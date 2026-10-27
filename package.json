@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "test": "node tests/run.cjs",
+    "content:export": "node scripts/export-course.cjs",
+    "test:browser": "node tests/browser.cjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.118.0",
@@ -20,3 +24,4 @@
     "typescript": "5.9.3"
   }
 }
+
