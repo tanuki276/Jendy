@@ -19,6 +19,9 @@ type Lesson = {
   phrases: Array<{ ja: string; id: string; noteJa: string; noteId: string }>;
 };
 
+const LOCAL_PROGRESS_KEY = "jendy:progress:v1";
+const LOCAL_DIRECTION_KEY = "jendy:direction:v1";
+
 const lessons: Lesson[] = [
   {
     id: "greetings-01",
@@ -128,6 +131,54 @@ function directionText(direction: Direction) {
       };
 }
 
+function readLocalProgress(direction: Direction) {
+  if (typeof window === "undefined") return new Set<string>();
+
+  try {
+    const raw = window.localStorage.getItem(LOCAL_PROGRESS_KEY);
+    const parsed = raw ? (JSON.parse(raw) as Partial<Record<Direction, string[]>>) : {};
+    const items = parsed[direction];
+    return new Set(Array.isArray(items) ? items.filter((item): item is string => typeof item === "string") : []);
+  } catch {
+    return new Set<string>();
+  }
+}
+
+function writeLocalProgress(direction: Direction, completed: Set<string>) {
+  if (typeof window === "undefined") return;
+
+  try {
+    const raw = window.localStorage.getItem(LOCAL_PROGRESS_KEY);
+    const parsed = raw ? (JSON.parse(raw) as Partial<Record<Direction, string[]>>) : {};
+    parsed[direction] = [...completed];
+    window.localStorage.setItem(LOCAL_PROGRESS_KEY, JSON.stringify(parsed));
+  } catch {
+    // Storage can be unavailable in strict/private browser modes. The in-memory state still works.
+  }
+}
+
+function writeLocalDirection(direction: Direction) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(LOCAL_DIRECTION_KEY, direction);
+  } catch {
+    // Ignore storage failures and keep the current session usable.
+  }
+}
+
+async function withTimeout<T>(promise: PromiseLike<T>, milliseconds = 7000): Promise<T> {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(() => reject(new Error("Supabase timeout")), milliseconds);
+  });
+
+  try {
+    return await Promise.race([Promise.resolve(promise), timeout]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+}
+
 export default function Home() {
   const supabase = useMemo(() => getSupabaseBrowserClient(), []);
   const [direction, setDirection] = useState<Direction>("ja-id");
@@ -145,48 +196,117 @@ export default function Home() {
   const copy = directionText(direction);
 
   useEffect(() => {
+    try {
+      const savedDirection = window.localStorage.getItem(LOCAL_DIRECTION_KEY);
+      if (savedDirection === "ja-id" || savedDirection === "id-ja") setDirection(savedDirection);
+    } catch {
+      // Local storage is optional; defaults keep the app functional.
+    }
+  }, []);
+
+  useEffect(() => {
     if (!supabase) return;
 
-    supabase.auth.getUser().then(({ data }) => setUser(data.user ?? null));
+    let active = true;
+    void (async () => {
+      try {
+        const { data } = await withTimeout(supabase.auth.getUser());
+        if (active) setUser(data.user ?? null);
+      } catch {
+        // Supabase may be paused/offline. Local learning must remain fully usable.
+      }
+    })();
+
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+      if (active) setUser(session?.user ?? null);
     });
 
-    return () => data.subscription.unsubscribe();
+    return () => {
+      active = false;
+      data.subscription.unsubscribe();
+    };
   }, [supabase]);
 
   useEffect(() => {
-    if (!supabase || !user) {
-      setCompleted(new Set());
-      return;
-    }
+    const local = readLocalProgress(direction);
+    setCompleted(local);
 
-    supabase
-      .from("jendy_progress")
-      .select("lesson_id, completed")
-      .eq("user_id", user.id)
-      .eq("direction", direction)
-      .eq("completed", true)
-      .then(({ data }) => {
-        setCompleted(new Set((data ?? []).map((row) => row.lesson_id as string)));
-      });
+    if (!supabase || !user) return;
+
+    let active = true;
+    void (async () => {
+      try {
+        const { data, error } = await withTimeout(
+          supabase
+            .from("jendy_progress")
+            .select("lesson_id, completed")
+            .eq("user_id", user.id)
+            .eq("direction", direction)
+            .eq("completed", true),
+        );
+        if (error) return;
+
+        const remote = new Set((data ?? []).map((row) => row.lesson_id as string));
+        const merged = new Set([...local, ...remote]);
+
+        if (active) {
+          setCompleted(merged);
+          writeLocalProgress(direction, merged);
+        }
+
+        const localOnly = [...local].filter((lessonId) => !remote.has(lessonId));
+        if (localOnly.length > 0) {
+          await withTimeout(
+            supabase.from("jendy_progress").upsert(
+              localOnly.map((lessonId) => ({
+                user_id: user.id,
+                lesson_id: lessonId,
+                direction,
+                completed: true,
+                score: 100,
+                updated_at: new Date().toISOString(),
+              })),
+              { onConflict: "user_id,lesson_id,direction" },
+            ),
+          );
+        }
+      } catch {
+        // Cloud sync is best-effort. Local progress is the source of continuity while offline.
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
   }, [supabase, user, direction]);
 
-  async function switchDirection() {
+  function syncDirectionToCloud(next: Direction) {
+    if (!supabase || !user) return;
+
+    void (async () => {
+      try {
+        await withTimeout(
+          supabase.from("jendy_profiles").upsert(
+            {
+              user_id: user.id,
+              display_name: user.user_metadata?.display_name ?? null,
+              learning_direction: next,
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: "user_id" },
+          ),
+        );
+      } catch {
+        // Direction is already persisted locally; cloud can catch up later.
+      }
+    })();
+  }
+
+  function switchDirection() {
     const next = direction === "ja-id" ? "id-ja" : "ja-id";
     setDirection(next);
-
-    if (supabase && user) {
-      await supabase.from("jendy_profiles").upsert(
-        {
-          user_id: user.id,
-          display_name: user.user_metadata?.display_name ?? null,
-          learning_direction: next,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: "user_id" },
-      );
-    }
+    writeLocalDirection(next);
+    syncDirectionToCloud(next);
   }
 
   function openAuth(mode: AuthMode) {
@@ -198,74 +318,101 @@ export default function Home() {
   async function submitAuth(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!supabase) {
-      setAuthMessage("Supabaseの接続設定がありません。");
+      setAuthMessage(
+        direction === "ja-id"
+          ? "現在はローカルモードです。ログインなしでも進捗はこの端末に保存されます。"
+          : "Mode lokal aktif. Progres tetap tersimpan di perangkat ini tanpa login.",
+      );
       return;
     }
 
     setAuthBusy(true);
     setAuthMessage("");
 
-    if (authMode === "signin") {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) setAuthMessage(error.message);
-      else {
-        setAuthMessage(direction === "ja-id" ? "ログインしました。" : "Berhasil masuk.");
-        setTimeout(() => setAuthOpen(false), 450);
-      }
-    } else {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: window.location.origin,
-          data: { display_name: displayName },
-        },
-      });
-
-      if (error) {
-        setAuthMessage(error.message);
-      } else if (!data.session) {
-        setAuthMessage(
-          direction === "ja-id"
-            ? "確認メールを送りました。メール内のリンクを開いて登録を完了してください。"
-            : "Email konfirmasi sudah dikirim. Buka tautannya untuk menyelesaikan pendaftaran.",
-        );
+    try {
+      if (authMode === "signin") {
+        const { error } = await withTimeout(supabase.auth.signInWithPassword({ email, password }));
+        if (error) setAuthMessage(error.message);
+        else {
+          setAuthMessage(direction === "ja-id" ? "ログインしました。ローカル進捗も同期します。" : "Berhasil masuk. Progres lokal akan disinkronkan.");
+          setTimeout(() => setAuthOpen(false), 450);
+        }
       } else {
-        setAuthMessage(direction === "ja-id" ? "アカウントを作成しました。" : "Akun berhasil dibuat.");
-        setTimeout(() => setAuthOpen(false), 450);
-      }
-    }
+        const { data, error } = await withTimeout(
+          supabase.auth.signUp({
+            email,
+            password,
+            options: {
+              emailRedirectTo: window.location.origin,
+              data: { display_name: displayName },
+            },
+          }),
+        );
 
-    setAuthBusy(false);
+        if (error) {
+          setAuthMessage(error.message);
+        } else if (!data.session) {
+          setAuthMessage(
+            direction === "ja-id"
+              ? "確認メールを送りました。メール内のリンクを開いて登録を完了してください。"
+              : "Email konfirmasi sudah dikirim. Buka tautannya untuk menyelesaikan pendaftaran.",
+          );
+        } else {
+          setAuthMessage(direction === "ja-id" ? "アカウントを作成しました。" : "Akun berhasil dibuat.");
+          setTimeout(() => setAuthOpen(false), 450);
+        }
+      }
+    } catch {
+      setAuthMessage(
+        direction === "ja-id"
+          ? "クラウドに接続できません。ローカル学習はそのまま利用できます。"
+          : "Tidak dapat terhubung ke cloud. Mode belajar lokal tetap dapat digunakan.",
+      );
+    } finally {
+      setAuthBusy(false);
+    }
   }
 
   async function signOut() {
-    if (!supabase) return;
-    await supabase.auth.signOut();
-    setCompleted(new Set());
+    if (supabase) {
+      try {
+        await withTimeout(supabase.auth.signOut());
+      } catch {
+        // Signing out of the remote session can fail while offline; local progress remains intact.
+      }
+    }
+    setUser(null);
+    setCompleted(readLocalProgress(direction));
   }
 
-  async function completeLesson(lessonId: string) {
-    if (!user || !supabase) {
-      openAuth("signin");
-      return;
-    }
-
+  function completeLesson(lessonId: string) {
     setSavingLesson(lessonId);
-    const { error } = await supabase.from("jendy_progress").upsert(
-      {
-        user_id: user.id,
-        lesson_id: lessonId,
-        direction,
-        completed: true,
-        score: 100,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "user_id,lesson_id,direction" },
-    );
-
-    if (!error) setCompleted((current) => new Set([...current, lessonId]));
+    const next = new Set([...completed, lessonId]);
+    setCompleted(next);
+    writeLocalProgress(direction, next);
     setSavingLesson(null);
+
+    if (!supabase || !user) return;
+
+    void (async () => {
+      try {
+        await withTimeout(
+          supabase.from("jendy_progress").upsert(
+            {
+              user_id: user.id,
+              lesson_id: lessonId,
+              direction,
+              completed: true,
+              score: 100,
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: "user_id,lesson_id,direction" },
+          ),
+        );
+      } catch {
+        // Local completion is already saved. It will be merged on a later successful session.
+      }
+    })();
   }
 
   function speak(text: string) {
@@ -318,7 +465,7 @@ export default function Home() {
           <div className="hero-proof">
             <div><strong>6</strong><span>{direction === "ja-id" ? "基礎ユニット" : "unit dasar"}</span></div>
             <div><strong>2-way</strong><span>{direction === "ja-id" ? "双方向学習" : "dua arah"}</span></div>
-            <div><strong>RLS</strong><span>{direction === "ja-id" ? "進捗を安全に保存" : "progres privat"}</span></div>
+            <div><strong>LOCAL</strong><span>{direction === "ja-id" ? "オフライン進捗保存" : "progres lokal"}</span></div>
           </div>
         </div>
 
@@ -371,7 +518,7 @@ export default function Home() {
         <div className="method-grid">
           <article><span>01</span><Icon name="book" size={24} /><h3>{direction === "ja-id" ? "母語で深く理解" : "Pahami lewat bahasa ibu"}</h3><p>{direction === "ja-id" ? "直訳では分からない接辞や語感を、日本語との差から説明。" : "Partikel dan nuansa Jepang dijelaskan melalui perbandingan dengan bahasa Indonesia."}</p></article>
           <article><span>02</span><Icon name="volume" size={24} /><h3>{direction === "ja-id" ? "音と一緒に覚える" : "Belajar bersama bunyi"}</h3><p>{direction === "ja-id" ? "例文はワンタップで読み上げ。文字だけの暗記から抜け出します。" : "Contoh dapat dibacakan dengan sekali tekan agar tidak hanya menghafal tulisan."}</p></article>
-          <article><span>03</span><Icon name="chart" size={24} /><h3>{direction === "ja-id" ? "進捗を積み上げる" : "Progres yang tersimpan"}</h3><p>{direction === "ja-id" ? "ログイン後は完了レッスンをSupabaseに保存。次回も続きから。" : "Setelah masuk, pelajaran selesai disimpan di Supabase agar bisa lanjut kapan saja."}</p></article>
+          <article><span>03</span><Icon name="chart" size={24} /><h3>{direction === "ja-id" ? "止まらない進捗保存" : "Progres tetap berjalan"}</h3><p>{direction === "ja-id" ? "まず端末に保存し、ログイン中はSupabaseにも同期。クラウド停止中でも学習できます。" : "Progres disimpan di perangkat terlebih dahulu lalu disinkronkan ke Supabase saat login. Belajar tetap berjalan saat cloud offline."}</p></article>
         </div>
       </section>
 
@@ -381,15 +528,11 @@ export default function Home() {
             <div className="section-kicker">{direction === "ja-id" ? "FOUNDATION CURRICULUM" : "KURIKULUM DASAR"}</div>
             <h2>{direction === "ja-id" ? "最初の6ユニット" : "6 unit pertama"}</h2>
           </div>
-          {user ? (
-            <div className="progress-card">
-              <div><Icon name="user" size={18} /><span>{user.user_metadata?.display_name || user.email}</span></div>
-              <strong>{progress}%</strong>
-              <div className="progress-track"><span style={{ width: `${progress}%` }} /></div>
-            </div>
-          ) : (
-            <button className="outline-button" onClick={() => openAuth("signup")}><Icon name="user" size={18} />{direction === "ja-id" ? "無料で進捗を保存" : "Simpan progres gratis"}</button>
-          )}
+          <div className="progress-card">
+            <div><Icon name="user" size={18} /><span>{user ? (user.user_metadata?.display_name || user.email) : (direction === "ja-id" ? "この端末に保存" : "Tersimpan di perangkat ini")}</span></div>
+            <strong>{progress}%</strong>
+            <div className="progress-track"><span style={{ width: `${progress}%` }} /></div>
+          </div>
         </div>
 
         <div className="lesson-grid">
@@ -439,15 +582,15 @@ export default function Home() {
       <section className="cta-section">
         <div className="cta-mark"><span /><span /></div>
         <div>
-          <p>{direction === "ja-id" ? "FOUNDATION IS LIVE" : "VERSI DASAR SUDAH AKTIF"}</p>
-          <h2>{direction === "ja-id" ? "今日から、一往復ずつ。" : "Mulai hari ini, satu langkah dua arah."}</h2>
+          <p>{direction === "ja-id" ? "LOCAL-FIRST FOUNDATION" : "FONDASI LOCAL-FIRST"}</p>
+          <h2>{direction === "ja-id" ? "クラウドが止まっても、学習は止めない。" : "Cloud boleh berhenti, belajar tetap lanjut."}</h2>
         </div>
-        {user ? <a className="light-button" href="#curriculum">{direction === "ja-id" ? "学習を続ける" : "Lanjut belajar"}<Icon name="arrow" size={18} /></a> : <button className="light-button" onClick={() => openAuth("signup")}>{direction === "ja-id" ? "アカウントを作る" : "Buat akun"}<Icon name="arrow" size={18} /></button>}
+        <a className="light-button" href="#curriculum">{direction === "ja-id" ? "学習を続ける" : "Lanjut belajar"}<Icon name="arrow" size={18} /></a>
       </section>
 
       <footer>
         <a href="#top" className="brand footer-brand"><span className="brand-mark"><span /></span><span>Jendy</span></a>
-        <p>Japanese ↔ Bahasa Indonesia · built with Next.js, Supabase & Vercel.</p>
+        <p>Japanese ↔ Bahasa Indonesia · Next.js · local-first · Supabase sync · Vercel.</p>
         <span>© 2026 Jendy</span>
       </footer>
 
@@ -457,8 +600,8 @@ export default function Home() {
             <button className="modal-close" aria-label="閉じる" onClick={() => setAuthOpen(false)}>×</button>
             <div className="auth-icon"><Icon name={authMode === "signin" ? "login" : "user"} size={24} /></div>
             <p className="modal-kicker">JENDY ACCOUNT</p>
-            <h2 id="auth-title">{authMode === "signin" ? (direction === "ja-id" ? "学習を続ける" : "Lanjut belajar") : (direction === "ja-id" ? "学習記録を残す" : "Simpan progres belajar")}</h2>
-            <p className="modal-description">{direction === "ja-id" ? "メールアドレスとパスワードでログイン。進捗はあなたのアカウントだけからアクセスできます。" : "Masuk dengan email dan kata sandi. Progres hanya dapat diakses oleh akun Anda."}</p>
+            <h2 id="auth-title">{authMode === "signin" ? (direction === "ja-id" ? "クラウド同期する" : "Sinkronkan ke cloud") : (direction === "ja-id" ? "同期用アカウントを作る" : "Buat akun sinkronisasi")}</h2>
+            <p className="modal-description">{direction === "ja-id" ? "ログインなしでもこの端末に進捗を保存できます。ログインすると、利用可能なときだけSupabaseにも同期します。" : "Progres tetap tersimpan di perangkat tanpa login. Jika masuk, progres juga disinkronkan ke Supabase saat tersedia."}</p>
             <form onSubmit={submitAuth}>
               {authMode === "signup" && <label>{direction === "ja-id" ? "表示名" : "Nama tampilan"}<input value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder={direction === "ja-id" ? "例: Yuki" : "Contoh: Yuki"} autoComplete="name" /></label>}
               <label>{direction === "ja-id" ? "メールアドレス" : "Email"}<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" required /></label>
