@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node tests/run.cjs",
     "content:export": "node scripts/export-course.cjs",
+    "test:routes": "node tests/routes.cjs",
     "test:browser": "node tests/browser.cjs"
   },
   "dependencies": {

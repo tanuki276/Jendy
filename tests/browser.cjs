@@ -13,15 +13,21 @@ catch { ({chromium} = require(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES + '
  const errors=[];
  page.on('pageerror', error=>errors.push(error.message));
  page.on('console', message=> {if(message.type()==='error' && /hydration|hydrated|React error/i.test(message.text())) errors.push(message.text());});
- await page.goto(process.env.JENDY_TEST_URL || 'http://127.0.0.1:3000');
+ const base=process.env.JENDY_TEST_URL || 'http://127.0.0.1:3000';
+ const visit = route => page.goto(new URL(route,base).href);
+ await visit('/');
  await page.getByRole('heading',{name:'その訳の先にある、「なぜ？」まで。'}).waitFor();
  const hero=page.locator('.hero-card');
  await hero.getByRole('button',{name:/sudah/}).click();
  assert.match(await hero.locator('.token-detail').innerText(),/過去活用/);
  await hero.locator('summary').click();assert.match(await hero.locator('details').innerText(),/食事が済んだ/);
  await hero.getByRole('button',{name:/この表現を復習に追加/}).click();
+ await page.locator('.nav-links').getByRole('link',{name:'復習',exact:true}).click();
+ assert.match(page.url(),/\/review$/);
+ assert.equal(await page.locator('#curriculum').count(),0);
  assert.equal(await page.locator('.review-top').innerText().then(t=>t.includes('1 DUE')),true);
  console.log('✓ Anatomy, Why?, and SRS save');
+ await visit('/dictionary');
  const dict=page.locator('#dictionary');
  await dict.getByLabel('語族辞書を検索').fill('pembaca');
  assert.match(await dict.locator('.family-branches').innerText(),/membacakan/);
@@ -29,6 +35,9 @@ catch { ({chromium} = require(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES + '
  await dict.getByLabel('語族辞書を検索').fill('');
  console.log('✓ Word family search and empty state');
  // Test the ENTIRE bank in both directions through the real lesson player.
+ await visit('/lesson');
+ assert.equal(await page.locator('.hero').count(),0);
+ assert.equal(await page.locator('#practice').count(),0);
  for (const direction of ['ja-id','id-ja']) {
   if(direction==='id-ja') await page.locator('.direction-mini').click();
   for (const lesson of lessons) {
@@ -49,12 +58,14 @@ catch { ({chromium} = require(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES + '
  }
  await page.getByLabel('Cari pelajaran',{exact:true}).fill('');
  // Reload existing state: no hydration mismatch; progress survives direction change.
- await page.reload();await page.getByRole('heading',{name:/Pahami bukan hanya arti/}).waitFor();
+ await visit('/dashboard');
+ await page.reload();
  await page.waitForFunction(()=>document.querySelector('.dashboard-progress strong')?.textContent==='100%');
  assert.equal(await page.locator('.dashboard-progress strong').innerText(),'100%');
  await page.locator('.direction-mini').click();
  await page.waitForFunction(()=>document.querySelector('.dashboard-progress strong')?.textContent==='100%');
  console.log('✓ Both-direction completion and reload persistence');
+ await visit('/practice');
  const practice=page.locator('#practice');
  await practice.getByRole('button',{name:'12問の練習を始める →',exact:true}).click();
  await practice.locator('.choice-grid button').first().click();
@@ -71,6 +82,7 @@ catch { ({chromium} = require(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES + '
  await page.reload();await practice.getByRole('heading',{name:'あなたの復習ポイント'}).waitFor();
  await page.waitForFunction(()=>Object.values(JSON.parse(localStorage.getItem('jendy:practice:v1'))).reduce((n,v)=>n+v.attempts,0)===2);
  console.log('✓ Choice practice, typed recall, and weakness persistence');
+ await visit('/lesson');
  await page.getByLabel('レベル',{exact:true}).last().selectOption('B1');
  assert.equal(await page.locator('.lesson-card').count(),6);
  await page.getByLabel('レベル',{exact:true}).last().selectOption('All');
@@ -78,15 +90,23 @@ catch { ({chromium} = require(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES + '
  await page.getByRole('button',{name:/さらに12レッスン/}).click();assert.equal(await page.locator('.lesson-card').count(),24);
  console.log('✓ Course filters and pagination');
  fs.mkdirSync('/tmp/jendy-qa',{recursive:true});
+ await visit('/');
  await page.screenshot({path:'/tmp/jendy-qa/desktop.png',fullPage:true});
  await page.setViewportSize({width:390,height:844});
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'mobile horizontal overflow');
  await page.screenshot({path:'/tmp/jendy-qa/mobile.png',fullPage:true});
+ await page.locator('.nav-links').getByRole('link',{name:'レッスン',exact:true}).click();
+ assert.match(page.url(),/\/lesson$/);
  await page.getByLabel('教材を検索',{exact:true}).fill(lessons[6].titleJa);
  await page.locator('.lesson-card button').click();
  await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>document.activeElement?.getAttribute('aria-label')),'閉じる');
  await page.screenshot({path:'/tmp/jendy-qa/mobile-lesson.png',fullPage:true});
  await page.keyboard.press('Escape');
+ await visit('/login');
+ await page.locator('.login-card form').waitFor();
+ assert.equal(await page.getByRole('dialog').count(),0);
+ assert.equal(await page.locator('#curriculum').count(),0);
+ assert.match(await page.locator('.login-card').innerText(),/ログインせずにレッスンを見る/);
  assert.deepEqual(errors,[]);
  console.log('✓ Mobile layout, keyboard focus, Escape, and zero runtime/hydration errors');
  } finally {await browser.close();}

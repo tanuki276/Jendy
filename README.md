@@ -4,6 +4,20 @@
 
 日本語とインドネシア語の違いから、文の構造・語感・使いどころを学ぶ双方向サービスです。
 
+## Pages
+
+| URL | Purpose |
+| --- | --- |
+| `/` | Introduction and links to learning activities |
+| `/login` | Sign in / create an account |
+| `/lesson` | Browse and take lessons |
+| `/practice` | Choice and typed practice |
+| `/dictionary` | Word families |
+| `/review` | Due SRS cards |
+| `/dashboard` | Progress and scores |
+
+Each URL renders its own activity. Navigation is available on desktop and mobile; learning direction and progress survive page changes. Names in introductions use Tini and Taro (太郎).
+
 ## Implemented
 
 - **48 complete lessons**: A1 30 / A2 12 / B1 6. Levels are course organization, not certification.
@@ -46,8 +60,11 @@ Supabase is optional for local learning. To enable existing cloud synchronizatio
 npm test
 npm run typecheck
 npm run build
+npm run test:routes
 npm run content:export
 ```
+
+The route test inspects production HTML for all seven pages, verifies that each contains only its intended activity, checks navigation, and rejects old names and infrastructure slogans.
 
 Tests inspect every authored question pair, every expanded distractor and explanation, level counts, session variety and coverage, weakness isolation, recall normalization, malformed storage, SRS scheduling, and server rendering of all expression cards in both directions.
 
