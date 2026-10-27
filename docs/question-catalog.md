@@ -1,6 +1,6 @@
 # Jendy: complete question catalog
 
-Generated from the shipped lesson data. 176 lessons, 912 question pairs, 1824 directional questions.
+Generated from the shipped lesson data. 192 lessons, 960 question pairs, 1920 directional questions.
 
 Every option, answer, and explanation is included below. This export does not create extra questions.
 
@@ -17456,6 +17456,874 @@ janji は約束。忘れないで は否定の依頼です。
 
 忘れないでね meminta agar tidak lupa dengan gaya akrab.
 
+## A2 · Mission 1 — 切符と乗り換え / Tiket dan transit
+
+ID: scenario-train-ticket
+
+dua tiket は切符二枚。目的地は ke で示します。 乗り換える場所を di mana で尋ねます。harus はここでは必要な手順。 berhenti di は停車地点。目的地へ向かう ke と区別します。
+
+まで menunjukkan tujuan perjalanan; 二枚 adalah dua lembar tiket. どこで menanyakan tempat kegiatan; 乗り換えればいいですか menanyakan cara yang tepat. 止まりますか menanyakan apakah kereta berhenti; に menandai titik berhenti.
+
+### scenario-train-ticket-0
+
+**JA → ID:** 「バンドンまでの切符を二枚ください」に対応する表現は？
+
+- Minta dua tiket ke Bandung ✓
+- Di mana saya harus transit?
+- Apakah kereta ini berhenti di bandara?
+
+dua tiket は切符二枚。目的地は ke で示します。
+
+**ID → JA:** Pilih terjemahan: Minta dua tiket ke Bandung
+
+- バンドンまでの切符を二枚ください ✓
+- どこで乗り換えればいいですか？
+- この電車は空港に止まりますか？
+
+まで menunjukkan tujuan perjalanan; 二枚 adalah dua lembar tiket.
+
+### scenario-train-ticket-1
+
+**JA → ID:** 「どこで乗り換えればいいですか？」に対応する表現は？
+
+- Di mana saya harus transit? ✓
+- Apakah kereta ini berhenti di bandara?
+- Minta dua tiket ke Bandung
+
+乗り換える場所を di mana で尋ねます。harus はここでは必要な手順。
+
+**ID → JA:** Pilih terjemahan: Di mana saya harus transit?
+
+- どこで乗り換えればいいですか？ ✓
+- この電車は空港に止まりますか？
+- バンドンまでの切符を二枚ください
+
+どこで menanyakan tempat kegiatan; 乗り換えればいいですか menanyakan cara yang tepat.
+
+### scenario-train-ticket-2
+
+**JA → ID:** 「この電車は空港に止まりますか？」に対応する表現は？
+
+- Apakah kereta ini berhenti di bandara? ✓
+- Minta dua tiket ke Bandung
+- Di mana saya harus transit?
+
+berhenti di は停車地点。目的地へ向かう ke と区別します。
+
+**ID → JA:** Pilih terjemahan: Apakah kereta ini berhenti di bandara?
+
+- この電車は空港に止まりますか？ ✓
+- バンドンまでの切符を二枚ください
+- どこで乗り換えればいいですか？
+
+止まりますか menanyakan apakah kereta berhenti; に menandai titik berhenti.
+
+## A2 · Mission 2 — 配達と受け取り / Pengiriman barang
+
+ID: scenario-delivery
+
+belum sampai は未到着。まだ届く可能性がある状態です。 titipkan は預ける依頼。受け取り場所を具体的に示します。 salah + 動詞で、誤ってその動作をしたことを表します。
+
+まだ届いていません berarti belum sampai, bukan hilang. 受付に預けてください meminta menitipkan paket di resepsionis. 間違えて menjelaskan bahwa alamat dimasukkan secara keliru.
+
+### scenario-delivery-0
+
+**JA → ID:** 「荷物はまだ届いていません」に対応する表現は？
+
+- Paketnya belum sampai ✓
+- Tolong titipkan paketnya di resepsionis
+- Saya salah memasukkan alamat
+
+belum sampai は未到着。まだ届く可能性がある状態です。
+
+**ID → JA:** Pilih terjemahan: Paketnya belum sampai
+
+- 荷物はまだ届いていません ✓
+- 荷物を受付に預けてください
+- 住所を間違えて入力しました
+
+まだ届いていません berarti belum sampai, bukan hilang.
+
+### scenario-delivery-1
+
+**JA → ID:** 「荷物を受付に預けてください」に対応する表現は？
+
+- Tolong titipkan paketnya di resepsionis ✓
+- Saya salah memasukkan alamat
+- Paketnya belum sampai
+
+titipkan は預ける依頼。受け取り場所を具体的に示します。
+
+**ID → JA:** Pilih terjemahan: Tolong titipkan paketnya di resepsionis
+
+- 荷物を受付に預けてください ✓
+- 住所を間違えて入力しました
+- 荷物はまだ届いていません
+
+受付に預けてください meminta menitipkan paket di resepsionis.
+
+### scenario-delivery-2
+
+**JA → ID:** 「住所を間違えて入力しました」に対応する表現は？
+
+- Saya salah memasukkan alamat ✓
+- Paketnya belum sampai
+- Tolong titipkan paketnya di resepsionis
+
+salah + 動詞で、誤ってその動作をしたことを表します。
+
+**ID → JA:** Pilih terjemahan: Saya salah memasukkan alamat
+
+- 住所を間違えて入力しました ✓
+- 荷物はまだ届いていません
+- 荷物を受付に預けてください
+
+間違えて menjelaskan bahwa alamat dimasukkan secara keliru.
+
+## A2 · Mission 3 — 通信とWi-Fi / Koneksi dan Wi-Fi
+
+ID: scenario-wifi
+
+beri tahu は知らせる。kata sandi がパスワードです。 tidak bisa は能力・可能性の否定。許可の否定ではありません。 mencoba は試す。てみる は試しに行うことを表します。
+
+教えてください di sini meminta informasi, bukan pelajaran formal. 接続できません memakai bentuk potensial negatif: tidak dapat tersambung. てみます menyatakan mencoba melakukan tindakan; もう一度 berarti sekali lagi.
+
+### scenario-wifi-0
+
+**JA → ID:** 「Wi-Fiのパスワードを教えてください」に対応する表現は？
+
+- Tolong beri tahu saya kata sandi Wi-Fi ✓
+- Saya tidak bisa terhubung ke internet
+- Saya akan mencoba menyambung lagi
+
+beri tahu は知らせる。kata sandi がパスワードです。
+
+**ID → JA:** Pilih terjemahan: Tolong beri tahu saya kata sandi Wi-Fi
+
+- Wi-Fiのパスワードを教えてください ✓
+- インターネットに接続できません
+- もう一度接続してみます
+
+教えてください di sini meminta informasi, bukan pelajaran formal.
+
+### scenario-wifi-1
+
+**JA → ID:** 「インターネットに接続できません」に対応する表現は？
+
+- Saya tidak bisa terhubung ke internet ✓
+- Saya akan mencoba menyambung lagi
+- Tolong beri tahu saya kata sandi Wi-Fi
+
+tidak bisa は能力・可能性の否定。許可の否定ではありません。
+
+**ID → JA:** Pilih terjemahan: Saya tidak bisa terhubung ke internet
+
+- インターネットに接続できません ✓
+- もう一度接続してみます
+- Wi-Fiのパスワードを教えてください
+
+接続できません memakai bentuk potensial negatif: tidak dapat tersambung.
+
+### scenario-wifi-2
+
+**JA → ID:** 「もう一度接続してみます」に対応する表現は？
+
+- Saya akan mencoba menyambung lagi ✓
+- Tolong beri tahu saya kata sandi Wi-Fi
+- Saya tidak bisa terhubung ke internet
+
+mencoba は試す。てみる は試しに行うことを表します。
+
+**ID → JA:** Pilih terjemahan: Saya akan mencoba menyambung lagi
+
+- もう一度接続してみます ✓
+- Wi-Fiのパスワードを教えてください
+- インターネットに接続できません
+
+てみます menyatakan mencoba melakukan tindakan; もう一度 berarti sekali lagi.
+
+## A2 · Mission 4 — 忘れ物を説明する / Barang tertinggal
+
+ID: scenario-lost-property
+
+meninggalkan は置いてきたこと。盗難と断定しません。 tertulis は書かれた状態。日本語のてあるは結果の状態です。 kalau sudah ditemukan で発見を条件にします。
+
+電車に忘れました berarti tas tertinggal di kereta. 書いてあります menyoroti hasil tulisan yang masih ada pada tas. 見つかったら adalah syarat; ていただけますか meminta bantuan dengan sopan.
+
+### scenario-lost-property-0
+
+**JA → ID:** 「電車にかばんを忘れました」に対応する表現は？
+
+- Saya meninggalkan tas di kereta ✓
+- Ada nama tertulis di tas hitam
+- Bisa tolong hubungi saya kalau sudah ditemukan?
+
+meninggalkan は置いてきたこと。盗難と断定しません。
+
+**ID → JA:** Pilih terjemahan: Saya meninggalkan tas di kereta
+
+- 電車にかばんを忘れました ✓
+- 黒いかばんに名前が書いてあります
+- 見つかったら連絡していただけますか？
+
+電車に忘れました berarti tas tertinggal di kereta.
+
+### scenario-lost-property-1
+
+**JA → ID:** 「黒いかばんに名前が書いてあります」に対応する表現は？
+
+- Ada nama tertulis di tas hitam ✓
+- Bisa tolong hubungi saya kalau sudah ditemukan?
+- Saya meninggalkan tas di kereta
+
+tertulis は書かれた状態。日本語のてあるは結果の状態です。
+
+**ID → JA:** Pilih terjemahan: Ada nama tertulis di tas hitam
+
+- 黒いかばんに名前が書いてあります ✓
+- 見つかったら連絡していただけますか？
+- 電車にかばんを忘れました
+
+書いてあります menyoroti hasil tulisan yang masih ada pada tas.
+
+### scenario-lost-property-2
+
+**JA → ID:** 「見つかったら連絡していただけますか？」に対応する表現は？
+
+- Bisa tolong hubungi saya kalau sudah ditemukan? ✓
+- Saya meninggalkan tas di kereta
+- Ada nama tertulis di tas hitam
+
+kalau sudah ditemukan で発見を条件にします。
+
+**ID → JA:** Pilih terjemahan: Bisa tolong hubungi saya kalau sudah ditemukan?
+
+- 見つかったら連絡していただけますか？ ✓
+- 電車にかばんを忘れました
+- 黒いかばんに名前が書いてあります
+
+見つかったら adalah syarat; ていただけますか meminta bantuan dengan sopan.
+
+## A2 · Mission 5 — 予約日時を変える / Mengubah janji
+
+ID: scenario-appointment
+
+mengubah ... ke ... は変更先を示す形です。 tersedia は利用可能な状態。sore を付けて午後を明確にします。 batalkan は取り消す依頼。変更するとは異なります。
+
+変更したいです menyatakan keinginan mengubah; 金曜日に adalah waktu baru. 空いていますか di sini menanyakan slot waktu yang tersedia. キャンセルしてください meminta pembatalan, bukan perubahan waktu.
+
+### scenario-appointment-0
+
+**JA → ID:** 「予約を金曜日に変更したいです」に対応する表現は？
+
+- Saya ingin mengubah reservasi ke hari Jumat ✓
+- Apakah pukul tiga sore masih tersedia?
+- Tolong batalkan reservasinya
+
+mengubah ... ke ... は変更先を示す形です。
+
+**ID → JA:** Pilih terjemahan: Saya ingin mengubah reservasi ke hari Jumat
+
+- 予約を金曜日に変更したいです ✓
+- 午後三時は空いていますか？
+- 予約をキャンセルしてください
+
+変更したいです menyatakan keinginan mengubah; 金曜日に adalah waktu baru.
+
+### scenario-appointment-1
+
+**JA → ID:** 「午後三時は空いていますか？」に対応する表現は？
+
+- Apakah pukul tiga sore masih tersedia? ✓
+- Tolong batalkan reservasinya
+- Saya ingin mengubah reservasi ke hari Jumat
+
+tersedia は利用可能な状態。sore を付けて午後を明確にします。
+
+**ID → JA:** Pilih terjemahan: Apakah pukul tiga sore masih tersedia?
+
+- 午後三時は空いていますか？ ✓
+- 予約をキャンセルしてください
+- 予約を金曜日に変更したいです
+
+空いていますか di sini menanyakan slot waktu yang tersedia.
+
+### scenario-appointment-2
+
+**JA → ID:** 「予約をキャンセルしてください」に対応する表現は？
+
+- Tolong batalkan reservasinya ✓
+- Saya ingin mengubah reservasi ke hari Jumat
+- Apakah pukul tiga sore masih tersedia?
+
+batalkan は取り消す依頼。変更するとは異なります。
+
+**ID → JA:** Pilih terjemahan: Tolong batalkan reservasinya
+
+- 予約をキャンセルしてください ✓
+- 予約を金曜日に変更したいです
+- 午後三時は空いていますか？
+
+キャンセルしてください meminta pembatalan, bukan perubahan waktu.
+
+## A2 · Mission 6 — 両替と手数料 / Menukar uang
+
+ID: scenario-exchange-money
+
+menukar A ke B は A から B への交換です。 biaya administrasi は手続きの費用。両替レートそのものとは別です。 minta は求める。Boleh saya ... で丁寧に依頼します。
+
+円をルピアに menunjukkan arah penukaran: yen menjadi rupiah. 手数料 berarti biaya layanan atau administrasi, bukan nilai tukar. いただけますか adalah permintaan sopan untuk menerima sesuatu.
+
+### scenario-exchange-money-0
+
+**JA → ID:** 「円をルピアに両替したいです」に対応する表現は？
+
+- Saya ingin menukar yen ke rupiah ✓
+- Berapa biaya administrasinya?
+- Boleh saya minta kuitansinya?
+
+menukar A ke B は A から B への交換です。
+
+**ID → JA:** Pilih terjemahan: Saya ingin menukar yen ke rupiah
+
+- 円をルピアに両替したいです ✓
+- 手数料はいくらですか？
+- 領収書をいただけますか？
+
+円をルピアに menunjukkan arah penukaran: yen menjadi rupiah.
+
+### scenario-exchange-money-1
+
+**JA → ID:** 「手数料はいくらですか？」に対応する表現は？
+
+- Berapa biaya administrasinya? ✓
+- Boleh saya minta kuitansinya?
+- Saya ingin menukar yen ke rupiah
+
+biaya administrasi は手続きの費用。両替レートそのものとは別です。
+
+**ID → JA:** Pilih terjemahan: Berapa biaya administrasinya?
+
+- 手数料はいくらですか？ ✓
+- 領収書をいただけますか？
+- 円をルピアに両替したいです
+
+手数料 berarti biaya layanan atau administrasi, bukan nilai tukar.
+
+### scenario-exchange-money-2
+
+**JA → ID:** 「領収書をいただけますか？」に対応する表現は？
+
+- Boleh saya minta kuitansinya? ✓
+- Saya ingin menukar yen ke rupiah
+- Berapa biaya administrasinya?
+
+minta は求める。Boleh saya ... で丁寧に依頼します。
+
+**ID → JA:** Pilih terjemahan: Boleh saya minta kuitansinya?
+
+- 領収書をいただけますか？ ✓
+- 円をルピアに両替したいです
+- 手数料はいくらですか？
+
+いただけますか adalah permintaan sopan untuk menerima sesuatu.
+
+## A2 · Mission 7 — 注文の細かい希望 / Permintaan saat memesan
+
+ID: scenario-restaurant-detail
+
+jangan は禁止・否定の依頼。gula は砂糖です。 kurangi は減らす。全部なしにする意味ではありません。 sendiri-sendiri は各自別々に。kami は聞き手を含まない私たち。
+
+入れないでください meminta agar bahan tidak ditambahkan. 少なめに berarti jumlah lebih sedikit, bukan tanpa es. 別々に払ってもいいですか meminta izin membayar secara terpisah.
+
+### scenario-restaurant-detail-0
+
+**JA → ID:** 「砂糖を入れないでください」に対応する表現は？
+
+- Tolong jangan tambahkan gula ✓
+- Tolong kurangi esnya
+- Boleh kami bayar sendiri-sendiri?
+
+jangan は禁止・否定の依頼。gula は砂糖です。
+
+**ID → JA:** Pilih terjemahan: Tolong jangan tambahkan gula
+
+- 砂糖を入れないでください ✓
+- 氷は少なめにしてください
+- 別々に払ってもいいですか？
+
+入れないでください meminta agar bahan tidak ditambahkan.
+
+### scenario-restaurant-detail-1
+
+**JA → ID:** 「氷は少なめにしてください」に対応する表現は？
+
+- Tolong kurangi esnya ✓
+- Boleh kami bayar sendiri-sendiri?
+- Tolong jangan tambahkan gula
+
+kurangi は減らす。全部なしにする意味ではありません。
+
+**ID → JA:** Pilih terjemahan: Tolong kurangi esnya
+
+- 氷は少なめにしてください ✓
+- 別々に払ってもいいですか？
+- 砂糖を入れないでください
+
+少なめに berarti jumlah lebih sedikit, bukan tanpa es.
+
+### scenario-restaurant-detail-2
+
+**JA → ID:** 「別々に払ってもいいですか？」に対応する表現は？
+
+- Boleh kami bayar sendiri-sendiri? ✓
+- Tolong jangan tambahkan gula
+- Tolong kurangi esnya
+
+sendiri-sendiri は各自別々に。kami は聞き手を含まない私たち。
+
+**ID → JA:** Pilih terjemahan: Boleh kami bayar sendiri-sendiri?
+
+- 別々に払ってもいいですか？ ✓
+- 砂糖を入れないでください
+- 氷は少なめにしてください
+
+別々に払ってもいいですか meminta izin membayar secara terpisah.
+
+## A2 · Mission 8 — 締切と進捗を伝える / Tenggat dan progres
+
+ID: scenario-work-deadline
+
+paling lambat は遅くとも。期限のまでにと対応します。 belum selesai はまだ完了していないこと。 perpanjang は延長する。丁寧な形でも承諾を前提にはしません。
+
+までに menandai batas waktu; laporan akan dikirim paling lambat saat itu. まだ終わっていません menyatakan proses pemeriksaan belum selesai. 延ばしていただけますか meminta perpanjangan tenggat dengan sopan.
+
+### scenario-work-deadline-0
+
+**JA → ID:** 「明日の朝までに報告書を送ります」に対応する表現は？
+
+- Saya akan mengirim laporan paling lambat besok pagi ✓
+- Pemeriksaannya belum selesai
+- Bisa tolong perpanjang tenggatnya?
+
+paling lambat は遅くとも。期限のまでにと対応します。
+
+**ID → JA:** Pilih terjemahan: Saya akan mengirim laporan paling lambat besok pagi
+
+- 明日の朝までに報告書を送ります ✓
+- 確認がまだ終わっていません
+- 締切を延ばしていただけますか？
+
+までに menandai batas waktu; laporan akan dikirim paling lambat saat itu.
+
+### scenario-work-deadline-1
+
+**JA → ID:** 「確認がまだ終わっていません」に対応する表現は？
+
+- Pemeriksaannya belum selesai ✓
+- Bisa tolong perpanjang tenggatnya?
+- Saya akan mengirim laporan paling lambat besok pagi
+
+belum selesai はまだ完了していないこと。
+
+**ID → JA:** Pilih terjemahan: Pemeriksaannya belum selesai
+
+- 確認がまだ終わっていません ✓
+- 締切を延ばしていただけますか？
+- 明日の朝までに報告書を送ります
+
+まだ終わっていません menyatakan proses pemeriksaan belum selesai.
+
+### scenario-work-deadline-2
+
+**JA → ID:** 「締切を延ばしていただけますか？」に対応する表現は？
+
+- Bisa tolong perpanjang tenggatnya? ✓
+- Saya akan mengirim laporan paling lambat besok pagi
+- Pemeriksaannya belum selesai
+
+perpanjang は延長する。丁寧な形でも承諾を前提にはしません。
+
+**ID → JA:** Pilih terjemahan: Bisa tolong perpanjang tenggatnya?
+
+- 締切を延ばしていただけますか？ ✓
+- 明日の朝までに報告書を送ります
+- 確認がまだ終わっていません
+
+延ばしていただけますか meminta perpanjangan tenggat dengan sopan.
+
+## A2 · Mission 9 — 分からないと伝える / Meminta penjelasan
+
+ID: scenario-learn-clarify
+
+perbedaan は違い。単語の個別の意味ではなく比較を尋ねます。 dengan は説明に使う手段。lebih sederhana はより簡単。 berikan satu contoh は例を一つ示す依頼です。
+
+違いは何ですか menanyakan perbedaan dua kata, bukan artinya satu per satu. もっと簡単な言葉で meminta penjelasan memakai kosakata yang lebih mudah. 例を挙げる berarti memberikan contoh, bukan menaikkan sesuatu secara harfiah.
+
+### scenario-learn-clarify-0
+
+**JA → ID:** 「この二つの単語の違いは何ですか？」に対応する表現は？
+
+- Apa perbedaan dua kata ini? ✓
+- Tolong jelaskan dengan kata-kata yang lebih sederhana
+- Tolong berikan satu contoh
+
+perbedaan は違い。単語の個別の意味ではなく比較を尋ねます。
+
+**ID → JA:** Pilih terjemahan: Apa perbedaan dua kata ini?
+
+- この二つの単語の違いは何ですか？ ✓
+- もっと簡単な言葉で説明してください
+- 例を一つ挙げてください
+
+違いは何ですか menanyakan perbedaan dua kata, bukan artinya satu per satu.
+
+### scenario-learn-clarify-1
+
+**JA → ID:** 「もっと簡単な言葉で説明してください」に対応する表現は？
+
+- Tolong jelaskan dengan kata-kata yang lebih sederhana ✓
+- Tolong berikan satu contoh
+- Apa perbedaan dua kata ini?
+
+dengan は説明に使う手段。lebih sederhana はより簡単。
+
+**ID → JA:** Pilih terjemahan: Tolong jelaskan dengan kata-kata yang lebih sederhana
+
+- もっと簡単な言葉で説明してください ✓
+- 例を一つ挙げてください
+- この二つの単語の違いは何ですか？
+
+もっと簡単な言葉で meminta penjelasan memakai kosakata yang lebih mudah.
+
+### scenario-learn-clarify-2
+
+**JA → ID:** 「例を一つ挙げてください」に対応する表現は？
+
+- Tolong berikan satu contoh ✓
+- Apa perbedaan dua kata ini?
+- Tolong jelaskan dengan kata-kata yang lebih sederhana
+
+berikan satu contoh は例を一つ示す依頼です。
+
+**ID → JA:** Pilih terjemahan: Tolong berikan satu contoh
+
+- 例を一つ挙げてください ✓
+- この二つの単語の違いは何ですか？
+- もっと簡単な言葉で説明してください
+
+例を挙げる berarti memberikan contoh, bukan menaikkan sesuatu secara harfiah.
+
+## A2 · Mission 10 — 無理せず誘いに返事する / Menjawab ajakan
+
+ID: scenario-invite-boundary
+
+kalau ... は参加できる条件。単なる予定の断定ではありません。 今回はと範囲を限定した断り。永久に断るとは限りません。 memaksakan diri は無理をする。親しい相手への気遣い。
+
+なら menunjukkan kondisi; hari Sabtu adalah waktu ketika pembicara bisa ikut. 見送ります di sini berarti memilih tidak ikut kali ini, bukan mengantar orang. 無理をしないでね adalah perhatian dalam gaya akrab.
+
+### scenario-invite-boundary-0
+
+**JA → ID:** 「土曜日なら参加できます」に対応する表現は？
+
+- Saya bisa ikut kalau hari Sabtu ✓
+- Kali ini saya tidak akan ikut
+- Jangan terlalu memaksakan diri, ya
+
+kalau ... は参加できる条件。単なる予定の断定ではありません。
+
+**ID → JA:** Pilih terjemahan: Saya bisa ikut kalau hari Sabtu
+
+- 土曜日なら参加できます ✓
+- 今回は参加を見送ります
+- 無理をしないでね
+
+なら menunjukkan kondisi; hari Sabtu adalah waktu ketika pembicara bisa ikut.
+
+### scenario-invite-boundary-1
+
+**JA → ID:** 「今回は参加を見送ります」に対応する表現は？
+
+- Kali ini saya tidak akan ikut ✓
+- Jangan terlalu memaksakan diri, ya
+- Saya bisa ikut kalau hari Sabtu
+
+今回はと範囲を限定した断り。永久に断るとは限りません。
+
+**ID → JA:** Pilih terjemahan: Kali ini saya tidak akan ikut
+
+- 今回は参加を見送ります ✓
+- 無理をしないでね
+- 土曜日なら参加できます
+
+見送ります di sini berarti memilih tidak ikut kali ini, bukan mengantar orang.
+
+### scenario-invite-boundary-2
+
+**JA → ID:** 「無理をしないでね」に対応する表現は？
+
+- Jangan terlalu memaksakan diri, ya ✓
+- Saya bisa ikut kalau hari Sabtu
+- Kali ini saya tidak akan ikut
+
+memaksakan diri は無理をする。親しい相手への気遣い。
+
+**ID → JA:** Pilih terjemahan: Jangan terlalu memaksakan diri, ya
+
+- 無理をしないでね ✓
+- 土曜日なら参加できます
+- 今回は参加を見送ります
+
+無理をしないでね adalah perhatian dalam gaya akrab.
+
+## A2 · Mission 11 — 家でのルールを確認 / Aturan di rumah
+
+ID: scenario-house-rules
+
+sebaiknya は望ましい行動の確認。許可とは焦点が違います。 jangan merokok は禁煙の依頼。場所の di は分けて書きます。 setelah は後で。dipakai は使われるという受動形。
+
+たほうがいいですか meminta saran tentang tindakan yang sebaiknya dilakukan. この部屋では membatasi tempat berlakunya larangan merokok. 使った後で menunjukkan urutan: pakai dahulu, kemudian rapikan.
+
+### scenario-house-rules-0
+
+**JA → ID:** 「靴を脱いだほうがいいですか？」に対応する表現は？
+
+- Sebaiknya saya melepas sepatu? ✓
+- Tolong jangan merokok di kamar ini
+- Tolong rapikan setelah dipakai
+
+sebaiknya は望ましい行動の確認。許可とは焦点が違います。
+
+**ID → JA:** Pilih terjemahan: Sebaiknya saya melepas sepatu?
+
+- 靴を脱いだほうがいいですか？ ✓
+- この部屋ではたばこを吸わないでください
+- 使った後で片付けてください
+
+たほうがいいですか meminta saran tentang tindakan yang sebaiknya dilakukan.
+
+### scenario-house-rules-1
+
+**JA → ID:** 「この部屋ではたばこを吸わないでください」に対応する表現は？
+
+- Tolong jangan merokok di kamar ini ✓
+- Tolong rapikan setelah dipakai
+- Sebaiknya saya melepas sepatu?
+
+jangan merokok は禁煙の依頼。場所の di は分けて書きます。
+
+**ID → JA:** Pilih terjemahan: Tolong jangan merokok di kamar ini
+
+- この部屋ではたばこを吸わないでください ✓
+- 使った後で片付けてください
+- 靴を脱いだほうがいいですか？
+
+この部屋では membatasi tempat berlakunya larangan merokok.
+
+### scenario-house-rules-2
+
+**JA → ID:** 「使った後で片付けてください」に対応する表現は？
+
+- Tolong rapikan setelah dipakai ✓
+- Sebaiknya saya melepas sepatu?
+- Tolong jangan merokok di kamar ini
+
+setelah は後で。dipakai は使われるという受動形。
+
+**ID → JA:** Pilih terjemahan: Tolong rapikan setelah dipakai
+
+- 使った後で片付けてください ✓
+- 靴を脱いだほうがいいですか？
+- この部屋ではたばこを吸わないでください
+
+使った後で menunjukkan urutan: pakai dahulu, kemudian rapikan.
+
+## A2 · Mission 12 — 道案内と順序 / Arah dan urutan
+
+ID: scenario-conditional-route
+
+setelah A, B は A の後に B をする順序です。 jalan はここでは歩く・進む意味。lurus はまっすぐ。 di seberang は向かい側。di sebelah の隣とは異なります。
+
+てから menunjukkan bahwa menyeberang dilakukan sebelum berbelok. まっすぐ進んでください meminta bergerak lurus sepanjang jalan. 向かいにあります menyatakan posisi di seberang bank, bukan di sebelahnya.
+
+### scenario-conditional-route-0
+
+**JA → ID:** 「信号を渡ってから右に曲がってください」に対応する表現は？
+
+- Setelah menyeberang di lampu lalu lintas, belok kanan ✓
+- Silakan jalan lurus di jalan ini
+- Letaknya di seberang bank
+
+setelah A, B は A の後に B をする順序です。
+
+**ID → JA:** Pilih terjemahan: Setelah menyeberang di lampu lalu lintas, belok kanan
+
+- 信号を渡ってから右に曲がってください ✓
+- この道をまっすぐ進んでください
+- 銀行の向かいにあります
+
+てから menunjukkan bahwa menyeberang dilakukan sebelum berbelok.
+
+### scenario-conditional-route-1
+
+**JA → ID:** 「この道をまっすぐ進んでください」に対応する表現は？
+
+- Silakan jalan lurus di jalan ini ✓
+- Letaknya di seberang bank
+- Setelah menyeberang di lampu lalu lintas, belok kanan
+
+jalan はここでは歩く・進む意味。lurus はまっすぐ。
+
+**ID → JA:** Pilih terjemahan: Silakan jalan lurus di jalan ini
+
+- この道をまっすぐ進んでください ✓
+- 銀行の向かいにあります
+- 信号を渡ってから右に曲がってください
+
+まっすぐ進んでください meminta bergerak lurus sepanjang jalan.
+
+### scenario-conditional-route-2
+
+**JA → ID:** 「銀行の向かいにあります」に対応する表現は？
+
+- Letaknya di seberang bank ✓
+- Setelah menyeberang di lampu lalu lintas, belok kanan
+- Silakan jalan lurus di jalan ini
+
+di seberang は向かい側。di sebelah の隣とは異なります。
+
+**ID → JA:** Pilih terjemahan: Letaknya di seberang bank
+
+- 銀行の向かいにあります ✓
+- 信号を渡ってから右に曲がってください
+- この道をまっすぐ進んでください
+
+向かいにあります menyatakan posisi di seberang bank, bukan di sebelahnya.
+
+## A2 · Mission 13 — 助けを申し出る / Menawarkan bantuan
+
+ID: scenario-give-help
+
+bantu membawa は運ぶのを手伝う申し出です。 sudah membantu で行われた援助に感謝します。 sendiri は自分で。強い言い方にすると援助を拒む印象にもなります。
+
+ましょうか menawarkan bantuan, bukan memerintah orang membawa barang. てくれてありがとうございます berterima kasih atas tindakan orang lain untuk pembicara. 自分でできます menyatakan mampu melakukan sendiri; gunakan nada sesuai konteks.
+
+### scenario-give-help-0
+
+**JA → ID:** 「荷物を持ちましょうか？」に対応する表現は？
+
+- Boleh saya bantu membawa barang bawaan Anda? ✓
+- Terima kasih sudah membantu saya
+- Saya bisa melakukannya sendiri
+
+bantu membawa は運ぶのを手伝う申し出です。
+
+**ID → JA:** Pilih terjemahan: Boleh saya bantu membawa barang bawaan Anda?
+
+- 荷物を持ちましょうか？ ✓
+- 手伝ってくれてありがとうございます
+- 自分でできます
+
+ましょうか menawarkan bantuan, bukan memerintah orang membawa barang.
+
+### scenario-give-help-1
+
+**JA → ID:** 「手伝ってくれてありがとうございます」に対応する表現は？
+
+- Terima kasih sudah membantu saya ✓
+- Saya bisa melakukannya sendiri
+- Boleh saya bantu membawa barang bawaan Anda?
+
+sudah membantu で行われた援助に感謝します。
+
+**ID → JA:** Pilih terjemahan: Terima kasih sudah membantu saya
+
+- 手伝ってくれてありがとうございます ✓
+- 自分でできます
+- 荷物を持ちましょうか？
+
+てくれてありがとうございます berterima kasih atas tindakan orang lain untuk pembicara.
+
+### scenario-give-help-2
+
+**JA → ID:** 「自分でできます」に対応する表現は？
+
+- Saya bisa melakukannya sendiri ✓
+- Boleh saya bantu membawa barang bawaan Anda?
+- Terima kasih sudah membantu saya
+
+sendiri は自分で。強い言い方にすると援助を拒む印象にもなります。
+
+**ID → JA:** Pilih terjemahan: Saya bisa melakukannya sendiri
+
+- 自分でできます ✓
+- 荷物を持ちましょうか？
+- 手伝ってくれてありがとうございます
+
+自分でできます menyatakan mampu melakukan sendiri; gunakan nada sesuai konteks.
+
+## A2 · Mission 14 — 頻度を正確に伝える / Frekuensi kegiatan
+
+ID: scenario-frequency
+
+dua kali seminggu は一週間に二回。dua minggu は二週間です。 hampir tidak pernah はほとんどしない頻度。完全なゼロとは限りません。 sedikit demi sedikit は少しずつ。量を小さく積み重ねます。
+
+週に二回 berarti dua kali dalam seminggu, bukan selama dua minggu. ほとんど〜ません menyatakan sangat jarang, bukan selalu tidak pernah. 少しずつ menjelaskan kemajuan bertahap; 毎日 menjelaskan frekuensi.
+
+### scenario-frequency-0
+
+**JA → ID:** 「週に二回運動します」に対応する表現は？
+
+- Saya berolahraga dua kali seminggu ✓
+- Belakangan ini saya hampir tidak pernah menonton televisi
+- Saya berlatih sedikit demi sedikit setiap hari
+
+dua kali seminggu は一週間に二回。dua minggu は二週間です。
+
+**ID → JA:** Pilih terjemahan: Saya berolahraga dua kali seminggu
+
+- 週に二回運動します ✓
+- 最近はほとんどテレビを見ません
+- 毎日少しずつ練習しています
+
+週に二回 berarti dua kali dalam seminggu, bukan selama dua minggu.
+
+### scenario-frequency-1
+
+**JA → ID:** 「最近はほとんどテレビを見ません」に対応する表現は？
+
+- Belakangan ini saya hampir tidak pernah menonton televisi ✓
+- Saya berlatih sedikit demi sedikit setiap hari
+- Saya berolahraga dua kali seminggu
+
+hampir tidak pernah はほとんどしない頻度。完全なゼロとは限りません。
+
+**ID → JA:** Pilih terjemahan: Belakangan ini saya hampir tidak pernah menonton televisi
+
+- 最近はほとんどテレビを見ません ✓
+- 毎日少しずつ練習しています
+- 週に二回運動します
+
+ほとんど〜ません menyatakan sangat jarang, bukan selalu tidak pernah.
+
+### scenario-frequency-2
+
+**JA → ID:** 「毎日少しずつ練習しています」に対応する表現は？
+
+- Saya berlatih sedikit demi sedikit setiap hari ✓
+- Saya berolahraga dua kali seminggu
+- Belakangan ini saya hampir tidak pernah menonton televisi
+
+sedikit demi sedikit は少しずつ。量を小さく積み重ねます。
+
+**ID → JA:** Pilih terjemahan: Saya berlatih sedikit demi sedikit setiap hari
+
+- 毎日少しずつ練習しています ✓
+- 週に二回運動します
+- 最近はほとんどテレビを見ません
+
+少しずつ menjelaskan kemajuan bertahap; 毎日 menjelaskan frekuensi.
+
 ## B1 · 43 — 接辞：-kan / -i / Akhiran -kan dan -i
 
 ID: contrast-affixes
@@ -17827,3 +18695,127 @@ Sapaan dan perhatian tidak selalu dipahami lewat terjemahan harfiah. Pelajari hu
 - おやすみなさい
 
 いただきます adalah ungkapan sebelum makan; terjemahan di sini menjelaskan fungsinya, bukan padanan harfiah.
+
+## B1 · Mission 15 — 推測と根拠を分ける / Dugaan dan alasan
+
+ID: scenario-evidence
+
+sepertinya は推測。理由を karena で示しています。 menurut は情報源。予報から得た情報を伝えます。 apakah ... atau tidak は〜かどうか。真偽を保留します。
+
+ようです menandai dugaan berdasarkan lampu yang menyala, bukan kepastian. によると menunjukkan sumber; そうです di sini menyampaikan informasi yang didengar. かどうか menyatakan pertanyaan ya/tidak yang tertanam dalam kalimat.
+
+### scenario-evidence-0
+
+**JA → ID:** 「電気がついているので誰かいるようです」に対応する表現は？
+
+- Sepertinya ada orang karena lampunya menyala ✓
+- Menurut prakiraan cuaca, besok akan cerah
+- Saya belum tahu apakah itu benar atau tidak
+
+sepertinya は推測。理由を karena で示しています。
+
+**ID → JA:** Pilih terjemahan: Sepertinya ada orang karena lampunya menyala
+
+- 電気がついているので誰かいるようです ✓
+- 予報によると明日は晴れるそうです
+- 本当かどうかはまだ分かりません
+
+ようです menandai dugaan berdasarkan lampu yang menyala, bukan kepastian.
+
+### scenario-evidence-1
+
+**JA → ID:** 「予報によると明日は晴れるそうです」に対応する表現は？
+
+- Menurut prakiraan cuaca, besok akan cerah ✓
+- Saya belum tahu apakah itu benar atau tidak
+- Sepertinya ada orang karena lampunya menyala
+
+menurut は情報源。予報から得た情報を伝えます。
+
+**ID → JA:** Pilih terjemahan: Menurut prakiraan cuaca, besok akan cerah
+
+- 予報によると明日は晴れるそうです ✓
+- 本当かどうかはまだ分かりません
+- 電気がついているので誰かいるようです
+
+によると menunjukkan sumber; そうです di sini menyampaikan informasi yang didengar.
+
+### scenario-evidence-2
+
+**JA → ID:** 「本当かどうかはまだ分かりません」に対応する表現は？
+
+- Saya belum tahu apakah itu benar atau tidak ✓
+- Sepertinya ada orang karena lampunya menyala
+- Menurut prakiraan cuaca, besok akan cerah
+
+apakah ... atau tidak は〜かどうか。真偽を保留します。
+
+**ID → JA:** Pilih terjemahan: Saya belum tahu apakah itu benar atau tidak
+
+- 本当かどうかはまだ分かりません ✓
+- 電気がついているので誰かいるようです
+- 予報によると明日は晴れるそうです
+
+かどうか menyatakan pertanyaan ya/tidak yang tertanam dalam kalimat.
+
+## B1 · Mission 16 — 修理と交換を頼む / Perbaikan dan penukaran
+
+ID: scenario-repair
+
+sejak tiba は到着時から。故障がいつからかを具体化します。 ditukar は交換される。返金の依頼とは異なります。 kira-kira はおよそ。修理の所要日数を尋ねます。
+
+届いたときから menjelaskan sejak kapan kondisi rusak ada. 交換できますか menanyakan kemungkinan penukaran, bukan pengembalian uang. 何日くらいかかりますか menanyakan perkiraan durasi dalam hari.
+
+### scenario-repair-0
+
+**JA → ID:** 「この商品は届いたときから壊れていました」に対応する表現は？
+
+- Barang ini sudah rusak sejak tiba ✓
+- Bisa ditukar dengan barang yang sama?
+- Kira-kira berapa hari yang diperlukan untuk perbaikan?
+
+sejak tiba は到着時から。故障がいつからかを具体化します。
+
+**ID → JA:** Pilih terjemahan: Barang ini sudah rusak sejak tiba
+
+- この商品は届いたときから壊れていました ✓
+- 同じ商品と交換できますか？
+- 修理には何日くらいかかりますか？
+
+届いたときから menjelaskan sejak kapan kondisi rusak ada.
+
+### scenario-repair-1
+
+**JA → ID:** 「同じ商品と交換できますか？」に対応する表現は？
+
+- Bisa ditukar dengan barang yang sama? ✓
+- Kira-kira berapa hari yang diperlukan untuk perbaikan?
+- Barang ini sudah rusak sejak tiba
+
+ditukar は交換される。返金の依頼とは異なります。
+
+**ID → JA:** Pilih terjemahan: Bisa ditukar dengan barang yang sama?
+
+- 同じ商品と交換できますか？ ✓
+- 修理には何日くらいかかりますか？
+- この商品は届いたときから壊れていました
+
+交換できますか menanyakan kemungkinan penukaran, bukan pengembalian uang.
+
+### scenario-repair-2
+
+**JA → ID:** 「修理には何日くらいかかりますか？」に対応する表現は？
+
+- Kira-kira berapa hari yang diperlukan untuk perbaikan? ✓
+- Barang ini sudah rusak sejak tiba
+- Bisa ditukar dengan barang yang sama?
+
+kira-kira はおよそ。修理の所要日数を尋ねます。
+
+**ID → JA:** Pilih terjemahan: Kira-kira berapa hari yang diperlukan untuk perbaikan?
+
+- 修理には何日くらいかかりますか？ ✓
+- この商品は届いたときから壊れていました
+- 同じ商品と交換できますか？
+
+何日くらいかかりますか menanyakan perkiraan durasi dalam hari.

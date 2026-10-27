@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import type { Direction } from "@/lib/learning-content";
 import { lessons } from "@/lib/learning-content";
 import { buildSession, normalizeRecall, practiceBank, readPracticeStats, recordPractice, shuffle, type PracticeItem, type PracticeStats } from "@/lib/practice";
+import { Medal } from "./CultureArt";
+import { WordOrderGame } from "./WordOrderGame";
 import { ExpressionCard } from "./ExpressionCard";
 
 type Props = { direction: Direction; onAnswer: (correct: boolean, lessonId: string, phraseIndex: number) => void };
@@ -44,19 +46,24 @@ export function PracticeLab({ direction, onAnswer }: Props) {
     locked.current = true;
     const correct = normalizeRecall(value) === normalizeRecall(answer);
     setChoice(value); setAnswered(true); if (correct) setScore(s => s + 1);
-    const next = recordPractice(stats, direction, current.lesson.id, correct);
+    recordAttempt(correct, current.lesson.id, current.phraseIndex);
+  }
+  function recordAttempt(correct: boolean, lessonId: string, phraseIndex: number) {
+    const next = recordPractice(stats, direction, lessonId, correct);
     setStats(next);
     try { localStorage.setItem("jendy:practice:v1", JSON.stringify(next)); } catch { /* Keep practicing in memory. */ }
-    onAnswer(correct, current.lesson.id, current.phraseIndex);
+    onAnswer(correct, lessonId, phraseIndex);
   }
   function next() { const nextIndex = index + 1; setIndex(nextIndex); prepare(session[nextIndex]); heading.current?.focus(); }
+  if (mode === "order") return <WordOrderGame direction={direction} onAnswer={recordAttempt} onBack={() => setMode("choose")} />;
   return <section className="practice-section" id="practice">
     <div className="section-kicker">PRACTICE WITHOUT A FINISH LINE</div>
     <h2>{ja ? "分かるから、使えるへ。" : "Dari paham, menjadi bisa memakai."}</h2>
     <p>{ja ? `${practiceBank.length}問 × 2方向。12問ずつ、弱点を織り交ぜて何度でも練習。` : `${practiceBank.length} soal × 2 arah. Latihan 12 soal per sesi dengan prioritas kelemahan.`}</p>
+    {!session.length && <button type="button" className="quest-entry" onClick={() => setMode("order")}><Medal/><span><strong>{ja ? "語順クエストに挑戦" : "Misi susun kata"}</strong><small>{ja ? "8問のミッション · ヒントと再挑戦つき" : "8 soal · Petunjuk dan coba ulang"}</small></span><span aria-hidden="true">→</span></button>}
     {!session.length || finished ? <>
       {finished && <div className="session-summary" role="status"><strong>{score} / {session.length}</strong><p>{ja ? "今回の例文との一致数。次は新しい組み合わせで練習できます。" : "Jumlah jawaban yang sesuai contoh sesi ini. Lanjutkan dengan susunan soal baru."}</p></div>}
-      <div className="practice-controls"><label>{ja ? "レベル" : "Tingkat"}<select value={level} onChange={e => setLevel(e.target.value)}><option value="All">{ja ? "すべて" : "Semua"}</option>{["A1", "A2", "B1"].map(value => <option key={value}>{value}</option>)}</select></label><label>{ja ? "練習方法" : "Cara latihan"}<select value={mode} onChange={e => setMode(e.target.value)}><option value="choose">{ja ? "選択問題" : "Pilihan ganda"}</option><option value="recall">{ja ? "文章を入力して思い出す" : "Mengingat dengan mengetik"}</option></select></label><button className="primary-button" disabled={!ready} onClick={() => start()}>{ja ? "12問の練習を始める" : "Mulai 12 soal"} →</button><button className="outline-button" disabled={!ready || !weaknesses.length} onClick={() => start(true)}>{ja ? "弱点だけ練習" : "Latih kelemahan"}</button></div>
+      <div className="practice-controls"><label>{ja ? "レベル" : "Tingkat"}<select value={level} onChange={e => setLevel(e.target.value)}><option value="All">{ja ? "すべて" : "Semua"}</option>{["A1", "A2", "B1"].map(value => <option key={value}>{value}</option>)}</select></label><label>{ja ? "練習方法" : "Cara latihan"}<select value={mode} onChange={e => setMode(e.target.value)}><option value="choose">{ja ? "選択問題" : "Pilihan ganda"}</option><option value="order">{ja ? "語順パズル・クエスト" : "Misi susun kata"}</option><option value="recall">{ja ? "文章を入力して思い出す" : "Mengingat dengan mengetik"}</option></select></label><button className="primary-button" disabled={!ready} onClick={() => start()}>{ja ? "12問の練習を始める" : "Mulai 12 soal"} →</button><button className="outline-button" disabled={!ready || !weaknesses.length} onClick={() => start(true)}>{ja ? "弱点だけ練習" : "Latih kelemahan"}</button></div>
       {empty && <p role="status">{ja ? "このレベルでは、まだ弱点が記録されていません。通常練習から始めてください。" : "Belum ada kelemahan pada tingkat ini. Mulai latihan biasa."}</p>}
     </> : current && <div className="practice-player">
       <div className="practice-top"><span>{current.lesson.level} · {index + 1} / {session.length}</span><button className="outline-button" onClick={() => { setSession([]); prepare(undefined); }}>{ja ? "練習を終える" : "Akhiri sesi"}</button></div>
