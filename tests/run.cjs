@@ -121,8 +121,8 @@ test('learning surfaces render on the server in both directions without browser 
 test('48 authored missions preserve bilingual chunks and point to real SRS phrases', () => {
  const {scenarioLessons,wordOrderQuestions}=require('../lib/scenario-course.ts');
  const {tilesFor,matchesOrder,nextHint,retryQuestions}=require('../lib/word-order.ts');
- assert.equal(allLessons.length,192);assert.equal(scenarioLessons.length,16);assert.equal(wordOrderQuestions.length,48);
- assert.equal(new Set(wordOrderQuestions.map(q=>q.id)).size,48);
+ assert.equal(allLessons.length,192);assert.equal(scenarioLessons.length,16);assert.equal(wordOrderQuestions.length,51);
+ assert.equal(new Set(wordOrderQuestions.map(q=>q.id)).size,51);
  for(const q of wordOrderQuestions){
   const lesson=allLessons.find(l=>l.id===q.lessonId);assert.ok(lesson);
   assert.equal(lesson.phrases[q.phraseIndex].ja,q.ja);assert.equal(lesson.phrases[q.phraseIndex].id,q.idText);

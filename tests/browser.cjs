@@ -46,7 +46,7 @@ catch { ({chromium} = require(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES + '
    const card=page.locator('.lesson-card').filter({has:page.getByRole('heading',{name:title,exact:true})});
    await card.locator('button').click();
    const modal=page.getByRole('dialog');
-   for(let phrase=0;phrase<3;phrase++) await modal.locator('.next-button').click();
+   await modal.locator('.translation-question').waitFor();
    for(let q=0;q<lesson.quiz.length;q++) {
     await modal.getByRole('button',{name:isJa?lesson.quiz[q].answerId:lesson.quiz[q].answerJa,exact:true}).click();
     await modal.locator('.quiz-feedback .next-button').click();

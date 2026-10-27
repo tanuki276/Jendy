@@ -95,3 +95,9 @@ The 48 authored pairs also support a word-order quest in both directions. Tap ti
 The shared theme uses Indonesian red/white and Japanese sakura pink, with inline SVG motifs for Fuji, cherry blossoms, Monas, traditional roof forms, batik-inspired geometry, stage seals, and a quest medal. No lives, attempt limits, or ad dependencies were added.
 
 `npm test` includes DOM interaction tests for tile selection, undo/reset, hints, double-submit prevention, missed-only retry, reverse direction, and tap-to-toggle word meanings. These tests run in jsdom; native browser layout, fonts, audio, and rendering still require visual review.
+
+## Direct lessons and optional study
+
+`/lesson` starts with a translation question immediately. `/study` is the separate reading/audio/grammar mode and ends after the final example without automatically starting a quiz. Each lesson question offers choice or keyboard input; the mode is retained while moving to the next question. Keyboard answers are normalized model-answer matches, not unrestricted translation grading. Every answered lesson question is added to SRS.
+
+Legacy quiz prompts consistently specify translation into Indonesian or Japanese. The old order question that displayed the correct sentence in its prompt is now a translation prompt. Word-order questions are explicit tile-construction tasks; the quest bank includes three basic SVO/possession exercises and 48 scenario exercises (51 pairs available in both directions).
