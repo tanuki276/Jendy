@@ -1,5 +1,6 @@
 "use client";
 
+import { BridgeMark } from "./BridgeMark";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -394,7 +395,7 @@ export function JendyApp({ view }: { view: PageView }) {
   return (
     <main>
       <header className="site-header">
-        <Link href="/" className="brand" aria-label="Jendy home"><span className="brand-mark"><span /></span><span>Jendy</span></Link>
+        <Link href="/" className="brand" aria-label="Jendy home"><BridgeMark /><span>Jendy</span></Link>
         <nav className="nav-links" aria-label={direction === "ja-id" ? "メインナビゲーション" : "Navigasi utama"}>
           {([
             ["dashboard", "/dashboard", "学習状況", "Dasbor"],
@@ -412,7 +413,7 @@ export function JendyApp({ view }: { view: PageView }) {
 
       {view === "home" && <>
       <section className="hero" id="top">
-        <div className="hero-copy">
+        <div className="hero-copy"><BridgeMark />
           <div className="eyebrow"><span />{copy.eyebrow}</div>
           <h1>{copy.title.split("\n").map((line, index) => <span key={line}>{line}{index === 0 && <br />}</span>)}</h1>
           <p>{copy.lead}</p>
@@ -548,7 +549,7 @@ export function JendyApp({ view }: { view: PageView }) {
         </div>
       </section>}
 
-      <footer><Link href="/" className="brand footer-brand"><span className="brand-mark"><span /></span><span>Jendy</span></Link><p>Japanese ↔ Bahasa Indonesia · Understand the why</p><span>© 2026 Jendy</span></footer>
+      <footer><Link href="/" className="brand footer-brand"><BridgeMark /><span>Jendy</span></Link><p>Japanese ↔ Bahasa Indonesia · Understand the why</p><span>© 2026 Jendy</span></footer>
     </main>
   );
 }
