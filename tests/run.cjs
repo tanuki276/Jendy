@@ -1,7 +1,8 @@
 // Run authored content and scheduling invariants without an extra test dependency.
 const assert = require('node:assert/strict');
 require('./register.cjs');
-const { lessons } = require('../lib/learning-content.ts');
+const { lessons: allLessons } = require('../lib/learning-content.ts');
+const lessons = allLessons.filter(l=>!l.id.startsWith('practice-frame-'));
 const { expandedLessons, units } = require('../lib/course-content.ts');
 const { anatomies, families } = require('../lib/language-insights.ts');
 const { buildSession, recordPractice, normalizeRecall, readPracticeStats, practiceBank } = require('../lib/practice.ts');
@@ -19,8 +20,8 @@ test('48 complete lessons with 30 A1 / 12 A2 / 6 B1', () => {
   for (const phrase of lesson.phrases) for (const key of ['ja','id','noteJa','noteId']) assert.ok(phrase[key]?.trim(), `${lesson.id}:${key}`);
  }
 });
-test('all 144 question pairs / 288 directional questions have a unique correct answer and bilingual explanation', () => {
- assert.equal(practiceBank.length,144);
+test('all 912 question pairs / 1824 directional questions have a unique correct answer and bilingual explanation', () => {
+ assert.equal(practiceBank.length,912);
  const ids = new Set();
  for (const {lesson, question:q} of practiceBank) {
   assert.ok(!ids.has(q.id), q.id); ids.add(q.id);
@@ -59,12 +60,12 @@ test('sentence anatomy is attached to actual course sentences, with bilingual ro
 });
 test('unlimited sessions have no duplicate questions, respect level, cover the bank, and change order', () => {
  const seen = new Set(); const schedules = new Set();
- for (let seed=1;seed<=300;seed++) {
+ for (let seed=1;seed<=3000;seed++) {
   const session=buildSession({},'ja-id','All',false,seeded(seed));
   assert.equal(session.length,12);assert.equal(new Set(session.map(i=>i.question.id)).size,12);
   session.forEach(item => seen.add(item.question.id)); schedules.add(session.map(i=>i.question.id).join('|'));
  }
- assert.equal(seen.size,144);assert.ok(schedules.size>290);
+ assert.equal(seen.size,912);assert.ok(schedules.size>290);
  for (const level of ['A1','A2','B1']) assert.ok(buildSession({},'id-ja',level).every(item=>item.lesson.level.startsWith(level)));
 });
 test('weaknesses prioritize the right direction and remain within the selected level', () => {
@@ -114,7 +115,7 @@ test('learning surfaces render on the server in both directions without browser 
    assert.ok(renderToStaticMarkup(React.createElement(ExpressionCard,{phrase,direction})).includes('Why?'));
   }
   assert.ok(renderToStaticMarkup(React.createElement(WordNetwork,{direction})).includes('baca'));
-  assert.ok(renderToStaticMarkup(React.createElement(PracticeLab,{direction,onAnswer:()=>{}})).includes('144'));
+  assert.ok(renderToStaticMarkup(React.createElement(PracticeLab,{direction,onAnswer:()=>{}})).includes('912'));
  }
 });
 console.log(`\n${checks} checks passed. All authored question records inspected.`);

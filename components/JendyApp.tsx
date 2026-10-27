@@ -441,7 +441,7 @@ export function JendyApp({ view }: { view: PageView }) {
       </section>
 
       <section className="home-paths" aria-label={direction === "ja-id" ? "学習を選ぶ" : "Pilih kegiatan"}>
-        <Link href="/lesson"><small>LESSONS</small><h2>{direction === "ja-id" ? "レッスンを選ぶ" : "Pilih pelajaran"}</h2><p>{direction === "ja-id" ? "A1からB1まで、48のテーマを順番に学ぶ。" : "48 tema dari A1 hingga B1."}</p><span>→</span></Link>
+        <Link href="/lesson"><small>LESSONS</small><h2>{direction === "ja-id" ? "レッスンを選ぶ" : "Pilih pelajaran"}</h2><p>{direction === "ja-id" ? "A1からB1まで、176のレッスンを順番に学ぶ。" : "176 pelajaran dari A1 hingga B1."}</p><span>→</span></Link>
         <Link href="/practice"><small>PRACTICE</small><h2>{direction === "ja-id" ? "問題を解く" : "Kerjakan soal"}</h2><p>{direction === "ja-id" ? "12問ずつ、覚えた表現を使ってみる。" : "Latih ungkapan dalam sesi 12 soal."}</p><span>→</span></Link>
         <Link href="/review"><small>REVIEW</small><h2>{direction === "ja-id" ? "覚えた表現を復習" : "Ulangi ungkapan"}</h2><p>{direction === "ja-id" ? "復習する時期が来た表現を確認する。" : "Ulangi ungkapan yang sudah waktunya diulas."}</p><span>→</span></Link>
       </section>
@@ -475,14 +475,14 @@ export function JendyApp({ view }: { view: PageView }) {
 
       {view === "lesson" && <>
       <section className="curriculum-section" id="curriculum">
-        <div className="curriculum-header"><div><div className="section-kicker">STRUCTURED CURRICULUM</div><h2>{direction === "ja-id" ? `${lessons.length}の学び、2つの視点。` : `${lessons.length} pelajaran, dua sudut pandang.`}</h2></div><p className="curriculum-note">{direction === "ja-id" ? "A1 30 / A2 12 / B1 6 · 文の理解 → 実践 → 復習" : "A1 30 / A2 12 / B1 6 · Pahami → latih → ulangi"}</p></div>
+        <div className="curriculum-header"><div><div className="section-kicker">STRUCTURED CURRICULUM</div><h2>{direction === "ja-id" ? `${lessons.length}の学び、2つの視点。` : `${lessons.length} pelajaran, dua sudut pandang.`}</h2></div><p className="curriculum-note">{direction === "ja-id" ? "基礎48 + 文の組み立て128 · 文の理解 → 実践 → 復習" : "基礎48 + 文の組み立て128 · Pahami → latih → ulangi"}</p></div>
         <div className="course-filters">
           <label>{direction === "ja-id" ? "教材を検索" : "Cari pelajaran"}<input type="search" value={search} onChange={e => { setSearch(e.target.value); setVisibleCount(12); }} placeholder={direction === "ja-id" ? "助詞、チャット、baca…" : "partikel, chat, baca…"} /></label>
           <label>{direction === "ja-id" ? "レベル" : "Tingkat"}<select value={courseLevel} onChange={e => { setCourseLevel(e.target.value); setVisibleCount(12); }}><option value="All">All</option>{["A1", "A2", "B1"].map(value => <option key={value}>{value}</option>)}</select></label>
           <label>{direction === "ja-id" ? "テーマ" : "Tema"}<select value={category} onChange={e => { setCategory(e.target.value); setVisibleCount(12); }}><option value="All">All</option>{categories.map(value => <option key={value}>{value}</option>)}</select></label>
           <span role="status">{filteredLessons.length} {direction === "ja-id" ? "レッスン" : "pelajaran"}</span>
         </div>
-        <div className="lesson-grid">
+        <div className="stage-path"><h2>{direction === "ja-id" ? "ステージを進めよう" : "Lanjutkan tahap belajar"}</h2><p>{direction === "ja-id" ? "6レッスンで1ステージ。HP・回数制限なしで何度でも挑戦できます。" : "Enam pelajaran per tahap. Tanpa HP atau batas percobaan."}</p>{Array.from({length:Math.ceil(lessons.length/6)},(_,stage)=>{const batch=lessons.slice(stage*6,stage*6+6);const done=batch.filter(l=>completed.has(l.id)).length;const next=batch.find(l=>!completed.has(l.id))??batch[0];return <button key={stage} className={done===batch.length?"stage complete":"stage"} onClick={()=>openLesson(next)}><span>{done===batch.length?"✓":stage+1}</span><strong>Stage {stage+1}</strong><small>{done} / {batch.length}</small></button>})}</div><div className="lesson-grid">
           {filteredLessons.slice(0, visibleCount).map((lesson) => {
             const isDone = completed.has(lesson.id);
             const score = learning.lessonScores[`${direction}:${lesson.id}`] ?? (direction === "ja-id" ? learning.lessonScores[lesson.id] : undefined);

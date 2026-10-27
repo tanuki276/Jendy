@@ -81,3 +81,7 @@ npm run test:browser
 `JENDY_TEST_URL` overrides `http://127.0.0.1:3000`; `JENDY_CHROMIUM_PATH` optionally selects an installed Chromium executable. The suite exercises all 288 directional lesson questions, saving/reload, dictionary search, practice, filters, keyboard behavior, and mobile overflow.
 
 Validation in this implementation environment: content/logic/server-render tests, TypeScript, and production build passed. Native Chromium could not launch here, so browser interactions, visual layout, and speech output remain unverified. No authenticated cloud write was performed.
+
+## Stage expansion
+
+176 lessons: 48 grammar/context lessons plus 128 controlled sentence-composition lessons (16 verb frames × 8 compatible objects). Total: 912 sentence/question pairs, 1,824 directional questions. The new practice lessons vary two subjects and three time expressions; they are not 128 new grammar topics. Thirty stages group six lessons each (the final stage has two). Each stage opens its next unfinished lesson, with completed stages available for replay. No hearts, attempt limits, or advertisements.
