@@ -50,12 +50,12 @@ export const foundationLessons: Lesson[] = [
     grammarId: "Dalam bahasa Jepang, ungkapan perkenalan berubah menurut tingkat kesopanan. Mulailah dari pola sopan です／ます agar aman dipakai dalam banyak situasi.",
     phrases: [
       { ja: "おはようございます", id: "Selamat pagi", reading: "sə-la-mat pa-gi", noteJa: "朝の丁寧なあいさつ。", noteId: "おはようございます adalah salam pagi sopan; おはよう untuk orang akrab." },
-      { ja: "私の名前はユキです", id: "Nama saya Yuki", reading: "na-ma sa-ya yu-ki", noteJa: "saya は丁寧で標準的な「私」。", noteId: "私の名前は〜です memakai の untuk kepemilikan dan は untuk topik; です membuatnya sopan." },
+      { ja: "私の名前はティニです", id: "Nama saya Tini", reading: "na-ma sa-ya ti-ni", noteJa: "saya は丁寧で標準的な「私」。", noteId: "私の名前は〜です memakai の untuk kepemilikan dan は untuk topik; です membuatnya sopan." },
       { ja: "日本から来ました", id: "Saya dari Jepang", reading: "sa-ya da-ri jə-paŋ", noteJa: "会話ではこの簡潔な形が自然。", noteId: "日本から来ました memakai から untuk asal dan 来ました sebagai bentuk lampau sopan dari 来る." },
     ],
     quiz: [
       { id: "g1", promptJa: "「おはようございます」は？", promptId: "Apa arti “Selamat pagi”?", choicesJa: ["おはようございます", "こんばんは", "ありがとう"], choicesId: ["Selamat pagi", "Selamat malam", "Terima kasih"], answerJa: "おはようございます", answerId: "Selamat pagi", explanationJa: "pagi は「朝」。selamat pagi で朝のあいさつです。", explanationId: "pagi berarti pagi; selamat pagi adalah salam pagi." },
-      { id: "g2", promptJa: "「私の名前はユキです」は？", promptId: "Apa arti “Nama saya Yuki”?", choicesJa: ["私はユキです", "私は東京です", "私は学生です"], choicesId: ["Nama saya Yuki", "Saya dari Yuki", "Yuki di mana"], answerJa: "私はユキです", answerId: "Nama saya Yuki", explanationJa: "nama = 名前、saya = 私。", explanationId: "nama berarti nama dan saya berarti saya." },
+      { id: "g2", promptJa: "「私の名前はティニです」は？", promptId: "Apa arti “Nama saya Tini”?", choicesJa: ["私の名前はティニです", "私の名前は太郎です", "私の名前はハナです"], choicesId: ["Nama saya Tini", "Nama saya Taro", "Nama saya Hana"], answerJa: "私の名前はティニです", answerId: "Nama saya Tini", explanationJa: "nama = 名前、saya = 私。Nama saya Tini で「私の名前はティニです」。", explanationId: "私の名前はティニです: 私の berarti milik saya; 名前 berarti nama; は menandai topik dan です membuatnya sopan." },
       { id: "g3", promptJa: "「日本から来ました」は？", promptId: "Apa arti “Saya dari Jepang”?", choicesJa: ["日本から来ました", "日本へ行きます", "日本語を話します"], choicesId: ["Saya dari Jepang", "Saya ke Jepang", "Saya bicara Jepang"], answerJa: "日本から来ました", answerId: "Saya dari Jepang", explanationJa: "dari は「〜から」。", explanationId: "dari menunjukkan asal, seperti ‘dari’." },
     ],
   },
