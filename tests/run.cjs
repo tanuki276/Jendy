@@ -118,7 +118,7 @@ test('learning surfaces render on the server in both directions without browser 
   assert.ok(renderToStaticMarkup(React.createElement(PracticeLab,{direction,onAnswer:()=>{}})).includes('960'));
  }
 });
-test('48 authored missions preserve bilingual chunks and point to real SRS phrases', () => {
+test('51 word-order missions preserve bilingual chunks and point to real SRS phrases', () => {
  const {scenarioLessons,wordOrderQuestions}=require('../lib/scenario-course.ts');
  const {tilesFor,matchesOrder,nextHint,retryQuestions}=require('../lib/word-order.ts');
  assert.equal(allLessons.length,192);assert.equal(scenarioLessons.length,16);assert.equal(wordOrderQuestions.length,51);

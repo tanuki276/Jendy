@@ -138,7 +138,7 @@ export function JendyApp({ view }: { view: PageView }) {
   const [authMessage, setAuthMessage] = useState("");
   const [authBusy, setAuthBusy] = useState(false);
 
-  useModalFocus(Boolean(activeLesson), modalRef, () => setActiveLesson(null));
+  useModalFocus(Boolean(activeLesson), modalRef, closeLesson);
   const categories = Array.from(new Set(lessons.map(lesson => lesson.category ?? "Foundation")));
   const filteredLessons = lessons.filter(lesson => (courseLevel === "All" || lesson.level.startsWith(courseLevel)) && (category === "All" || (lesson.category ?? "Foundation") === category) && `${lesson.titleJa} ${lesson.titleId} ${lesson.grammarJa} ${lesson.grammarId}`.toLowerCase().includes(search.trim().toLowerCase()));
   const quizChoices = useMemo(() => {
@@ -155,6 +155,8 @@ export function JendyApp({ view }: { view: PageView }) {
 
   useEffect(() => {
     try {
+      const savedMode = window.localStorage.getItem("jendy:answer-mode:v1");
+      if (savedMode === "choose" || savedMode === "keyboard") setAnswerMode(savedMode);
       const savedDirection = window.localStorage.getItem(LOCAL_DIRECTION_KEY);
       if (savedDirection === "ja-id" || savedDirection === "id-ja") setDirection(savedDirection);
     } catch {
@@ -163,6 +165,17 @@ export function JendyApp({ view }: { view: PageView }) {
     setLearning(loadLearningState());
     setStorageReady(true);
   }, []);
+
+  useEffect(() => {
+    if (!storageReady) return;
+    try { window.localStorage.setItem("jendy:answer-mode:v1", answerMode); } catch { /* Keep in-memory preference. */ }
+  }, [answerMode, storageReady]);
+
+  useEffect(() => {
+    if (!activeLesson) return;
+    const target = selectedAnswer ? modalRef.current?.querySelector<HTMLElement>(".quiz-feedback .next-button") : modalRef.current;
+    (target ?? modalRef.current)?.focus();
+  }, [activeLesson, quizIndex, lessonPhase, selectedAnswer]);
 
   useEffect(() => {
     if (storageReady) saveLearningState(learning);
@@ -269,6 +282,7 @@ export function JendyApp({ view }: { view: PageView }) {
   }
 
   function closeLesson() {
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     setActiveLesson(null);
   }
 
@@ -394,6 +408,7 @@ export function JendyApp({ view }: { view: PageView }) {
     setUser(null);
   }
 
+  const followingLesson = activeLesson ? lessons[lessons.findIndex(lesson => lesson.id === activeLesson.id) + 1] : undefined;
   const lessonScore = activeLesson ? Math.round(quizScore / activeLesson.quiz.length * 100) : 0;
 
   return (
@@ -529,9 +544,9 @@ export function JendyApp({ view }: { view: PageView }) {
             <div className="phrase-player"><div className="phrase-progress"><span>{phraseIndex + 1} / {activeLesson.phrases.length}</span><div><i style={{ width: `${((phraseIndex + 1) / activeLesson.phrases.length) * 100}%` }} /></div></div><small>{sourceText(direction, activeLesson.phrases[phraseIndex])}</small><strong>{targetText(direction, activeLesson.phrases[phraseIndex])}</strong>{activeLesson.phrases[phraseIndex].reading && direction === "ja-id" && <em>{activeLesson.phrases[phraseIndex].reading}</em>}<p>{direction === "ja-id" ? activeLesson.phrases[phraseIndex].noteJa : activeLesson.phrases[phraseIndex].noteId}</p><ExpressionCard key={`${activeLesson.id}:${phraseIndex}:${direction}`} phrase={activeLesson.phrases[phraseIndex]} direction={direction} onSave={() => setLearning(current => upsertReviewItem(current, { lessonId: activeLesson.id, phraseIndex, direction }))} /><div className="player-actions"><button className="audio-button" onClick={() => speak(targetText(direction, activeLesson.phrases[phraseIndex]))}><Icon name="volume" size={19} />{direction === "ja-id" ? "発音" : "Audio"}</button><button className="next-button" onClick={nextPhrase}>{phraseIndex === activeLesson.phrases.length - 1 ? (direction === "ja-id" ? "学習を終える" : "Selesai belajar") : (direction === "ja-id" ? "次へ" : "Berikutnya")}<Icon name="arrow" size={18} /></button></div></div>
           </div>}
 
-          {lessonPhase === "quiz" && (() => { const question = activeLesson.quiz[quizIndex]; const choices = quizChoices; const expected = direction === "ja-id" ? question.answerId : question.answerJa; return <div className="quiz-stage"><div className="quiz-progress"><span>QUESTION {quizIndex + 1} / {activeLesson.quiz.length}</span><strong>{quizScore} pts</strong></div><LessonQuestion key={`${question.id}:${direction}`} question={question} direction={direction} choices={choices} answered={Boolean(selectedAnswer)} selected={selectedAnswer ?? undefined} mode={answerMode} onMode={setAnswerMode} onAnswer={answerQuestion} />{selectedAnswer && <div className={`quiz-feedback ${answerCorrect ? "correct" : "wrong"}`}><strong>{answerCorrect ? (direction === "ja-id" ? "正解" : "Benar") : (direction === "ja-id" ? "もう一歩" : "Belum tepat")}</strong><p className="model-answer">{expected}</p>{answerMode === "keyboard" && !answerCorrect && <p>{direction === "ja-id" ? "模範例と一致しませんでした。別の正しい訳もあり、この照合だけで文法の誤りとは断定できません。" : "Jawaban berbeda dari contoh. Terjemahan lain juga bisa benar."}</p>}<p>{direction === "ja-id" ? question.explanationJa : question.explanationId}</p><button className="next-button" onClick={nextQuestion}>{quizIndex === activeLesson.quiz.length - 1 ? (direction === "ja-id" ? "結果を見る" : "Lihat hasil") : (direction === "ja-id" ? "次の問題" : "Soal berikutnya")}<Icon name="arrow" size={18} /></button></div>}</div>; })()}
+          {lessonPhase === "quiz" && (() => { const question = activeLesson.quiz[quizIndex]; const choices = quizChoices; const expected = direction === "ja-id" ? question.answerId : question.answerJa; return <div className="quiz-stage"><div className="quiz-progress"><span>QUESTION {quizIndex + 1} / {activeLesson.quiz.length}</span><strong>{quizScore} pts</strong></div><LessonQuestion key={`${question.id}:${direction}`} question={question} direction={direction} choices={choices} answered={Boolean(selectedAnswer)} selected={selectedAnswer ?? undefined} mode={answerMode} onMode={setAnswerMode} onAnswer={answerQuestion} />{selectedAnswer && <div role="status" aria-live="polite" className={`quiz-feedback ${answerCorrect ? "correct" : "wrong"}`}><strong>{answerCorrect ? (direction === "ja-id" ? "正解" : "Benar") : (direction === "ja-id" ? "もう一歩" : "Belum tepat")}</strong><p className="model-answer">{expected}</p>{answerMode === "keyboard" && !answerCorrect && <p>{direction === "ja-id" ? "模範例と一致しませんでした。別の正しい訳もあり、この照合だけで文法の誤りとは断定できません。" : "Jawaban berbeda dari contoh. Terjemahan lain juga bisa benar."}</p>}<p>{direction === "ja-id" ? question.explanationJa : question.explanationId}</p><button className="next-button" onClick={nextQuestion}>{quizIndex === activeLesson.quiz.length - 1 ? (direction === "ja-id" ? "結果を見る" : "Lihat hasil") : (direction === "ja-id" ? "次の問題" : "Soal berikutnya")}<Icon name="arrow" size={18} /></button></div>}</div>; })()}
 
-          {lessonPhase === "result" && <div className="result-stage"><div className={`result-ring ${lessonScore >= 67 ? "pass" : ""}`}><strong>{lessonScore}%</strong><span>{lessonScore >= 67 ? "PASS" : "RETRY"}</span></div><h3>{lessonScore >= 67 ? (direction === "ja-id" ? "レッスン完了" : "Pelajaran selesai") : (direction === "ja-id" ? "もう一度挑戦" : "Coba lagi")}</h3><p>{lessonScore >= 67 ? (direction === "ja-id" ? "例文は復習キューに入りました。忘却曲線に合わせて再登場します。" : "Contoh sudah masuk antrean SRS dan akan muncul lagi sesuai jadwal ulasan.") : (direction === "ja-id" ? "67%以上で完了です。間違えたポイントを確認して再挑戦しましょう。" : "Butuh 67% untuk lulus. Tinjau lalu coba lagi.")}</p><div className="result-actions"><button className="outline-button" onClick={retryLessonQuiz}>{direction === "ja-id" ? "クイズ再挑戦" : "Ulangi kuis"}</button><button className="next-button" onClick={closeLesson}>{direction === "ja-id" ? "終了" : "Selesai"}</button></div></div>}
+          {lessonPhase === "result" && <div className="result-stage"><div className={`result-ring ${lessonScore >= 67 ? "pass" : ""}`}><strong>{lessonScore}%</strong><span>{lessonScore >= 67 ? "PASS" : "RETRY"}</span></div><h3>{lessonScore >= 67 ? (direction === "ja-id" ? "レッスン完了" : "Pelajaran selesai") : (direction === "ja-id" ? "もう一度挑戦" : "Coba lagi")}</h3><p>{lessonScore >= 67 ? (direction === "ja-id" ? "解いた表現は復習に追加しました。次のレッスンに進むか、あとで復習しましょう。" : "Contoh sudah masuk antrean SRS dan akan muncul lagi sesuai jadwal ulasan.") : (direction === "ja-id" ? "67%以上で完了です。間違えたポイントを確認して再挑戦しましょう。" : "Butuh 67% untuk lulus. Tinjau lalu coba lagi.")}</p><div className="result-actions"><button className="outline-button" onClick={retryLessonQuiz}>{direction === "ja-id" ? "クイズ再挑戦" : "Ulangi kuis"}</button>{lessonScore >= 67 && followingLesson && <button className="next-button" onClick={() => openLesson(followingLesson)}>{direction === "ja-id" ? "次のレッスンへ" : "Pelajaran berikutnya"}<Icon name="arrow" size={18} /></button>}<button className="outline-button" onClick={closeLesson}>{direction === "ja-id" ? "一覧に戻る" : "Kembali ke daftar"}</button></div></div>}
         </div>
       </div>}
 
