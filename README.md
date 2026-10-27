@@ -20,8 +20,8 @@ Each URL renders its own activity. Navigation is available on desktop and mobile
 
 ## Implemented
 
-- **48 complete lessons**: A1 30 / A2 12 / B1 6. Levels are course organization, not certification.
-- **144 authored question pairs / 288 directional questions**: every question includes a prompt, correct answer, two explicit distractors, and explanation in both directions. No placeholder lessons or on-demand AI generation.
+- **192 lessons**: 48 foundational/context lessons, 128 controlled sentence-practice lessons, and 16 scenario missions. Levels are course organization, not certification.
+- **960 question pairs / 1,920 directional questions**: every question includes a prompt, correct answer, two explicit distractors, and explanation in both directions. No placeholder lessons or on-demand AI generation.
 - Why? explanation for every example, including Japanese explanations for Japanese speakers and Indonesian explanations for Indonesian speakers.
 - Sentence Anatomy for 12 selected examples: labeled and colored segments, tappable roles, structural gloss, and contextual register guidance. Other examples provide Why? without inventing an analysis.
 - Searchable word family network: **7 roots / 39 word forms** (baca, ajar, jalan, tulis, kerja, 書く, 食べる).
@@ -40,7 +40,7 @@ Foundation, Daily Life, Travel, Social, Relationship, Work, Internet, Natural Sp
 
 Topics include sudah/belum, masih/sedang, pernah, di/ke/dari, は/が/を/に/で, negation, permission vs ability, obligations, word families, chats, airport/Grab/hotel, workplace communication, passive forms, appearance vs hearsay, changes, and conditionals.
 
-The complete prompts, options, answers, and explanations are in [docs/question-catalog.md](docs/question-catalog.md). Source content is in `lib/learning-content.ts` (original 6 lessons) and `lib/course-content.ts` (42 new lessons). Adding a unit requires authored example pairs, distractors in both languages, and explanations in both languages; tests reject missing fields or invalid choices.
+The complete prompts, options, answers, and explanations are in [docs/question-catalog.md](docs/question-catalog.md). Source content is in `lib/learning-content.ts` (original 6 lessons) and `lib/course-content.ts` (42 contrast lessons), `lib/extended-course.ts` (128 sentence-practice lessons), and `lib/scenario-course.ts` (16 missions plus explicit word-order chunks). Adding a unit requires authored example pairs, distractors in both languages, and explanations in both languages; tests reject missing fields or invalid choices.
 
 ## Development
 
@@ -81,3 +81,17 @@ npm run test:browser
 `JENDY_TEST_URL` overrides `http://127.0.0.1:3000`; `JENDY_CHROMIUM_PATH` optionally selects an installed Chromium executable. The suite exercises all 288 directional lesson questions, saving/reload, dictionary search, practice, filters, keyboard behavior, and mobile overflow.
 
 Validation in this implementation environment: content/logic/server-render tests, TypeScript, and production build passed. Native Chromium could not launch here, so browser interactions, visual layout, and speech output remain unverified. No authenticated cloud write was performed.
+
+## Stage expansion
+
+192 lessons: 48 grammar/context lessons, 128 controlled sentence-composition lessons (16 verb frames × 8 compatible objects), and 16 scenario missions. Total: 960 sentence/question pairs, 1,920 directional questions. Sentence practice varies two subjects and three time expressions; these are not 128 new grammar topics. Thirty-two stages group six lessons each. Each stage opens its next unfinished lesson, with completed stages available for replay. No hearts, attempt limits, or advertisements.
+
+## Sakura / Merah Putih update
+
+192 lessons, 960 question pairs (1,920 directional questions), 32 stages. The additional 16 scenario lessons contain 48 authored expression pairs with bilingual explanations: train tickets, delivery, Wi-Fi, lost property, appointments, money exchange, restaurant requests, deadlines, clarification, invitations, house rules, directions, offering help, frequency, evidence, and repairs.
+
+The 48 authored pairs also support a word-order quest in both directions. Tap tiles to assemble a model sentence, tap selected tiles to undo, reset, ask for a hint, or retry missed questions after an eight-question session. This is an additional exercise mode for those same pairs, not another 96 distinct authored sentences. Answers and chunks are explicit; alternative natural word orders are not declared ungrammatical. Quest answers feed the existing practice-topic statistics and SRS callback.
+
+The shared theme uses Indonesian red/white and Japanese sakura pink, with inline SVG motifs for Fuji, cherry blossoms, Monas, traditional roof forms, batik-inspired geometry, stage seals, and a quest medal. No lives, attempt limits, or ad dependencies were added.
+
+`npm test` includes DOM interaction tests for tile selection, undo/reset, hints, double-submit prevention, missed-only retry, reverse direction, and tap-to-toggle word meanings. These tests run in jsdom; native browser layout, fonts, audio, and rendering still require visual review.

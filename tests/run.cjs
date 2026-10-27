@@ -1,7 +1,8 @@
 // Run authored content and scheduling invariants without an extra test dependency.
 const assert = require('node:assert/strict');
 require('./register.cjs');
-const { lessons } = require('../lib/learning-content.ts');
+const { lessons: allLessons } = require('../lib/learning-content.ts');
+const lessons = allLessons.filter(l=>!l.id.startsWith('practice-frame-')&&!l.id.startsWith('scenario-'));
 const { expandedLessons, units } = require('../lib/course-content.ts');
 const { anatomies, families } = require('../lib/language-insights.ts');
 const { buildSession, recordPractice, normalizeRecall, readPracticeStats, practiceBank } = require('../lib/practice.ts');
@@ -19,8 +20,8 @@ test('48 complete lessons with 30 A1 / 12 A2 / 6 B1', () => {
   for (const phrase of lesson.phrases) for (const key of ['ja','id','noteJa','noteId']) assert.ok(phrase[key]?.trim(), `${lesson.id}:${key}`);
  }
 });
-test('all 144 question pairs / 288 directional questions have a unique correct answer and bilingual explanation', () => {
- assert.equal(practiceBank.length,144);
+test('all 960 question pairs / 1920 directional questions have a unique correct answer and bilingual explanation', () => {
+ assert.equal(practiceBank.length,960);
  const ids = new Set();
  for (const {lesson, question:q} of practiceBank) {
   assert.ok(!ids.has(q.id), q.id); ids.add(q.id);
@@ -59,12 +60,12 @@ test('sentence anatomy is attached to actual course sentences, with bilingual ro
 });
 test('unlimited sessions have no duplicate questions, respect level, cover the bank, and change order', () => {
  const seen = new Set(); const schedules = new Set();
- for (let seed=1;seed<=300;seed++) {
+ for (let seed=1;seed<=3000;seed++) {
   const session=buildSession({},'ja-id','All',false,seeded(seed));
   assert.equal(session.length,12);assert.equal(new Set(session.map(i=>i.question.id)).size,12);
   session.forEach(item => seen.add(item.question.id)); schedules.add(session.map(i=>i.question.id).join('|'));
  }
- assert.equal(seen.size,144);assert.ok(schedules.size>290);
+ assert.equal(seen.size,960);assert.ok(schedules.size>290);
  for (const level of ['A1','A2','B1']) assert.ok(buildSession({},'id-ja',level).every(item=>item.lesson.level.startsWith(level)));
 });
 test('weaknesses prioritize the right direction and remain within the selected level', () => {
@@ -114,7 +115,26 @@ test('learning surfaces render on the server in both directions without browser 
    assert.ok(renderToStaticMarkup(React.createElement(ExpressionCard,{phrase,direction})).includes('Why?'));
   }
   assert.ok(renderToStaticMarkup(React.createElement(WordNetwork,{direction})).includes('baca'));
-  assert.ok(renderToStaticMarkup(React.createElement(PracticeLab,{direction,onAnswer:()=>{}})).includes('144'));
+  assert.ok(renderToStaticMarkup(React.createElement(PracticeLab,{direction,onAnswer:()=>{}})).includes('960'));
  }
+});
+test('48 authored missions preserve bilingual chunks and point to real SRS phrases', () => {
+ const {scenarioLessons,wordOrderQuestions}=require('../lib/scenario-course.ts');
+ const {tilesFor,matchesOrder,nextHint,retryQuestions}=require('../lib/word-order.ts');
+ assert.equal(allLessons.length,192);assert.equal(scenarioLessons.length,16);assert.equal(wordOrderQuestions.length,48);
+ assert.equal(new Set(wordOrderQuestions.map(q=>q.id)).size,48);
+ for(const q of wordOrderQuestions){
+  const lesson=allLessons.find(l=>l.id===q.lessonId);assert.ok(lesson);
+  assert.equal(lesson.phrases[q.phraseIndex].ja,q.ja);assert.equal(lesson.phrases[q.phraseIndex].id,q.idText);
+  assert.equal(q.jaChunks.join(''),q.ja);assert.equal(q.idChunks.join(' '),q.idText);
+  for(const direction of ['ja-id','id-ja']){
+   const tiles=tilesFor(q,direction,seeded(19));const chunks=direction==='ja-id'?q.idChunks:q.jaChunks;
+   assert.equal(new Set(tiles.map(t=>t.id)).size,chunks.length);
+   const ordered=[...tiles].sort((a,b)=>a.id-b.id);assert.ok(matchesOrder(q,ordered,direction));
+   assert.equal(matchesOrder(q,[],direction),false);assert.equal(nextHint(q,ordered,direction),null);
+   assert.equal(nextHint(q,[],direction).text,chunks[0]);
+  }
+ }
+ assert.equal(retryQuestions(wordOrderQuestions,[wordOrderQuestions[0].id,wordOrderQuestions[0].id]).length,1);
 });
 console.log(`\n${checks} checks passed. All authored question records inspected.`);

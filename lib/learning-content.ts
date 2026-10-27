@@ -35,6 +35,8 @@ export type Lesson = {
   quiz: QuizQuestion[];
 };
 
+import { scenarioLessons } from "./scenario-course";
+import { extendedLessons } from "./extended-course";
 import { expandedLessons } from "./course-content";
 
 export const foundationLessons: Lesson[] = [
@@ -168,7 +170,7 @@ export const foundationLessons: Lesson[] = [
   },
 ];
 
-export const lessons: Lesson[] = [...foundationLessons, ...expandedLessons].sort((a, b) => a.level.slice(0, 2).localeCompare(b.level.slice(0, 2)));
+export const lessons: Lesson[] = [...foundationLessons, ...expandedLessons, ...extendedLessons, ...scenarioLessons].sort((a, b) => a.level.slice(0, 2).localeCompare(b.level.slice(0, 2)));
 
 export function getLesson(lessonId: string) {
   return lessons.find((lesson) => lesson.id === lessonId);
