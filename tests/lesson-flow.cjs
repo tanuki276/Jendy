@@ -20,7 +20,7 @@ act(()=>{Object.getOwnPropertyDescriptor(dom.window.HTMLTextAreaElement.prototyp
 assert.equal(button('答えを確認').disabled,false);
 click(button('答えを確認'));assert.equal(document.activeElement,document.querySelector('.quiz-feedback .next-button'));assert.match(document.querySelector('.quiz-feedback strong').textContent,/正解/);
 click(document.querySelector('.quiz-feedback .next-button'));
-assert.ok(document.querySelector('.tile-bank'),'next question returns to automatic panel mode');
+assert.ok(document.querySelector('.translation-question'),'next question uses the newly generated plan');
 click(button('選択式'));assert.ok(document.querySelector('.choice-grid'));
 for(let i=1;i<3;i++){
  click(button('選択式'));
@@ -99,4 +99,10 @@ assert.equal(document.querySelector('.translation-question h3'),null,'listening 
 
 click(button('選択式'));assert.ok(document.querySelector('.choice-grid'));
 console.log('✓ Tile construction, undo, listening hidden prompt, and unavailable-audio fallback');
+act(()=>document.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape'})));
+const {PracticeLab}=require('../components/PracticeLab.tsx');
+act(()=>root.render(React.createElement(PracticeLab,{direction:'ja-id',onAnswer(){}})));
+click([...document.querySelectorAll('button')].find(b=>b.textContent.includes('12問の練習を始める')));
+assert.ok(document.querySelector('.practice-player .tile-bank'),'practice also defaults to panels, not choices');
+console.log('✓ Practice starts in random panel-first mode');
 act(()=>root.unmount());dom.window.close();
