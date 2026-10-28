@@ -16,15 +16,15 @@ assert.match(document.querySelector('.question-instruction').textContent,/イン
 assert.equal(document.querySelector('.translation-question h3').textContent,lessons[0].quiz[0].answerJa);
 click(button('キーボード入力'));assert.ok(document.querySelector('textarea'));
 const input=document.querySelector('textarea');
-act(()=>{Object.getOwnPropertyDescriptor(dom.window.HTMLTextAreaElement.prototype,'value').set.call(input,'selamat pagi!');input.dispatchEvent(new dom.window.Event('input',{bubbles:true}));});
+act(()=>{Object.getOwnPropertyDescriptor(dom.window.HTMLTextAreaElement.prototype,'value').set.call(input,'saya!');input.dispatchEvent(new dom.window.Event('input',{bubbles:true}));});
 assert.equal(button('答えを確認').disabled,false);
 click(button('答えを確認'));assert.equal(document.activeElement,document.querySelector('.quiz-feedback .next-button'));assert.match(document.querySelector('.quiz-feedback strong').textContent,/正解/);
 click(document.querySelector('.quiz-feedback .next-button'));
 assert.ok(document.querySelector('.translation-question'),'next question uses the newly generated plan');
 click(button('選択式'));assert.ok(document.querySelector('.choice-grid'));
-for(let i=1;i<3;i++){
+for(let i=1;i<12;i++){
  click(button('選択式'));
- const answer=lessons[0].quiz[i].answerId;
+ const answer=lessons[0].quiz[i%3].answerId;
  click(button(answer,document.querySelector('.choice-grid')));
  assert.equal(document.querySelectorAll('.choice-grid button.correct').length,1);
  click(document.querySelector('.quiz-feedback .next-button'));
@@ -67,18 +67,18 @@ render('lesson','repair');
 if(document.querySelector('.direction-mini').textContent.includes('ID → JA'))click(document.querySelector('.direction-mini'));
 click(document.querySelector('.journey-nodes button'));
 click(button('選択式'));
-for(let i=0;i<3;i++){
+for(let i=0;i<12;i++){
  click(button('選択式'));
  const scope=document.querySelector('.choice-grid');
- const wrong=[...scope.querySelectorAll('button')].find(b=>b.textContent!==lessons[0].quiz[i].answerId);
- click(i===0?wrong:button(lessons[0].quiz[i].answerId,scope));
+ const wrong=[...scope.querySelectorAll('button')].find(b=>b.textContent!==lessons[0].quiz[i%3].answerId);
+ click(i===0?wrong:button(lessons[0].quiz[i%3].answerId,scope));
  click(document.querySelector('.quiz-feedback .next-button'));
 }
-assert.equal(document.querySelector('.result-ring strong').textContent,'67%');
+assert.equal(document.querySelector('.result-ring strong').textContent,'92%');
 click(button('間違えた1問を解き直す'));click(button('選択式'));
 click(button(lessons[0].quiz[0].answerId,document.querySelector('.choice-grid')));
 click(document.querySelector('.quiz-feedback .next-button'));
-assert.equal(document.querySelector('.result-ring strong').textContent,'67%');
+assert.equal(document.querySelector('.result-ring strong').textContent,'92%');
 assert.equal(document.querySelector('.repair-button'),null);
 console.log('✓ Mistake-only repair preserves first-pass score and clears the repair queue');
 // Tiles use all authored words and can be removed and reinserted.
