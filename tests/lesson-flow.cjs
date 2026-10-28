@@ -9,7 +9,7 @@ const root=createRoot(document.getElementById('root'));const router={push(){},re
 function render(view,key){act(()=>root.render(React.createElement(AppRouterContext.Provider,{value:router},React.createElement(JendyApp,{view,key}))))}
 function click(el){assert.ok(el);act(()=>el.click())}
 function button(text,scope=document){const b=[...scope.querySelectorAll('button')].find(b=>b.textContent.trim()===text);assert.ok(b,text);return b}
-render('lesson','lesson');click(document.querySelector('.lesson-card .lesson-action'));
+render('lesson','lesson');assert.ok(document.querySelector('.journey-nodes'));assert.equal(document.querySelector('.lesson-grid').hidden,true);click(document.querySelector('.journey-resume button'));
 assert.ok(document.querySelector('.quiz-stage'));assert.equal(document.querySelector('.learn-stage'),null);
 assert.match(document.querySelector('.question-instruction').textContent,/インドネシア語に訳/);
 assert.equal(document.querySelector('.translation-question h3').textContent,lessons[0].quiz[0].answerJa);
@@ -58,4 +58,41 @@ const japaneseInput=document.querySelector('textarea');
 act(()=>{Object.getOwnPropertyDescriptor(dom.window.HTMLTextAreaElement.prototype,'value').set.call(japaneseInput,lessons[0].quiz[0].answerJa);japaneseInput.dispatchEvent(new dom.window.Event('input',{bubbles:true}));});
 click(button('Periksa jawaban'));assert.equal(document.querySelector('.quiz-feedback strong').textContent,'Benar');
 console.log('✓ Reverse translation asks Indonesian → Japanese and accepts Japanese keyboard input');
+
+// Wrong answers can be repaired without rewriting first-pass accuracy.
+act(()=>document.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape'})));
+render('lesson','repair');
+if(document.querySelector('.direction-mini').textContent.includes('ID → JA'))click(document.querySelector('.direction-mini'));
+click(document.querySelector('.journey-nodes button'));
+click(button('選択式'));
+for(let i=0;i<3;i++){
+ const scope=document.querySelector('.choice-grid');
+ const wrong=[...scope.querySelectorAll('button')].find(b=>b.textContent!==lessons[0].quiz[i].answerId);
+ click(i===0?wrong:button(lessons[0].quiz[i].answerId,scope));
+ click(document.querySelector('.quiz-feedback .next-button'));
+}
+assert.equal(document.querySelector('.result-ring strong').textContent,'67%');
+click(button('間違えた1問を解き直す'));
+click(button(lessons[0].quiz[0].answerId,document.querySelector('.choice-grid')));
+click(document.querySelector('.quiz-feedback .next-button'));
+assert.equal(document.querySelector('.result-ring strong').textContent,'67%');
+assert.equal(document.querySelector('.repair-button'),null);
+console.log('✓ Mistake-only repair preserves first-pass score and clears the repair queue');
+// Tiles use all authored words and can be removed and reinserted.
+click(button('クイズ再挑戦'));click(button('文章タイル'));
+const words=lessons[0].quiz[0].answerId.split(/\s+/);
+assert.equal(button('答えを確認').disabled,true);
+for(const word of words)click([...document.querySelectorAll('.tile-bank button')].find(b=>!b.disabled&&b.textContent===word));
+click(document.querySelector('.tile-answer button'));
+assert.equal(button('答えを確認').disabled,true);
+// Restart tile selection via mode switch.
+click(button('選択式'));click(button('文章タイル'));
+for(const word of words)click([...document.querySelectorAll('.tile-bank button')].find(b=>!b.disabled&&b.textContent===word));
+click(button('答えを確認'));assert.equal(document.querySelector('.quiz-feedback strong').textContent,'正解');
+click(document.querySelector('.quiz-feedback .next-button'));click(button('聞き取り'));
+assert.equal(document.querySelector('.translation-question h3'),null,'listening hides the text answer and translation cue');
+click(document.querySelector('[aria-label="音声を再生"]'));
+assert.match(document.querySelector('.listening-prompt [role=status]').textContent,/再生できません/);
+click(button('選択式'));assert.ok(document.querySelector('.choice-grid'));
+console.log('✓ Tile construction, undo, listening hidden prompt, and unavailable-audio fallback');
 act(()=>root.unmount());dom.window.close();

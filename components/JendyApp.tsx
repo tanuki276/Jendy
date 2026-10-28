@@ -1,6 +1,7 @@
 "use client";
 
-import { LessonQuestion } from "./LessonQuestion";
+import { LearningJourney } from "./LearningJourney";
+import { LessonQuestion, type AnswerMode } from "./LessonQuestion";
 import { normalizeRecall } from "@/lib/practice";
 import { CultureBanner, StageSeal } from "./CultureArt";
 import { BridgeMark } from "./BridgeMark";
@@ -123,7 +124,13 @@ export function JendyApp({ view }: { view: PageView }) {
   const [lessonPhase, setLessonPhase] = useState<LessonPhase>("learn");
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [quizIndex, setQuizIndex] = useState(0);
-  const [answerMode, setAnswerMode] = useState<"choose" | "keyboard">("choose");
+  const [answerMode, setAnswerMode] = useState<AnswerMode>("choose");
+  const [mistakes, setMistakes] = useState<number[]>([]);
+  const [repairQueue, setRepairQueue] = useState<number[]>([]);
+  const [repairPosition, setRepairPosition] = useState(0);
+  const [catalogOpen, setCatalogOpen] = useState(false);
+  const [combo, setCombo] = useState(0);
+  const [bestCombo, setBestCombo] = useState(0);
   const [quizScore, setQuizScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [answerCorrect, setAnswerCorrect] = useState<boolean | null>(null);
@@ -156,7 +163,7 @@ export function JendyApp({ view }: { view: PageView }) {
   useEffect(() => {
     try {
       const savedMode = window.localStorage.getItem("jendy:answer-mode:v1");
-      if (savedMode === "choose" || savedMode === "keyboard") setAnswerMode(savedMode);
+      if (savedMode === "choose" || savedMode === "keyboard" || savedMode === "tiles" || savedMode === "listen") setAnswerMode(savedMode);
       const savedDirection = window.localStorage.getItem(LOCAL_DIRECTION_KEY);
       if (savedDirection === "ja-id" || savedDirection === "id-ja") setDirection(savedDirection);
     } catch {
@@ -272,6 +279,7 @@ export function JendyApp({ view }: { view: PageView }) {
   }
 
   function openLesson(lesson: Lesson) {
+    setMistakes([]); setRepairQueue([]); setRepairPosition(0); setCombo(0); setBestCombo(0);
     setActiveLesson(lesson);
     setLessonPhase(view === "study" ? "learn" : "quiz");
     setPhraseIndex(0);
@@ -305,12 +313,29 @@ export function JendyApp({ view }: { view: PageView }) {
     const correct = normalizeRecall(choice) === normalizeRecall(expected);
     setSelectedAnswer(choice);
     setAnswerCorrect(correct);
-    if (correct) setQuizScore((score) => score + 1);
+    if (correct) {
+      if (!repairQueue.length) setQuizScore((score) => score + 1);
+      setCombo(value => value + 1); setBestCombo(value => Math.max(value, combo + 1));
+    } else {
+      setCombo(0);
+      if (!repairQueue.length) setMistakes(value => value.includes(quizIndex) ? value : [...value, quizIndex]);
+    }
     setLearning((current) => upsertReviewItem(recordAnswer(current, correct), { lessonId: activeLesson.id, phraseIndex: quizIndex, direction }));
   }
 
   function nextQuestion() {
     if (!activeLesson) return;
+    if (repairQueue.length) {
+      const remaining = [...repairQueue];
+      if (!answerCorrect) remaining.push(quizIndex);
+      if (repairPosition + 1 < remaining.length) {
+        setRepairQueue(remaining); setRepairPosition(value => value + 1);
+        setQuizIndex(remaining[repairPosition + 1]); setSelectedAnswer(null); setAnswerCorrect(null);
+      } else {
+        setMistakes([]); setRepairQueue([]); setLessonPhase("result");
+      }
+      return;
+    }
     if (quizIndex < activeLesson.quiz.length - 1) {
       setQuizIndex((index) => index + 1);
       setSelectedAnswer(null);
@@ -346,7 +371,13 @@ export function JendyApp({ view }: { view: PageView }) {
     }
   }
 
+  function repairMistakes() {
+    setRepairQueue(mistakes); setRepairPosition(0); setQuizIndex(mistakes[0]);
+    setSelectedAnswer(null); setAnswerCorrect(null); setLessonPhase("quiz"); setCombo(0);
+  }
+
   function retryLessonQuiz() {
+    setMistakes([]); setRepairQueue([]); setRepairPosition(0); setCombo(0); setBestCombo(0);
     setLessonPhase("quiz");
     setQuizIndex(0);
     setQuizScore(0);
@@ -495,14 +526,14 @@ export function JendyApp({ view }: { view: PageView }) {
 
       {(view === "lesson" || view === "study") && <>
       <section className="curriculum-section" id="curriculum">
-        <p className="mode-description">{view === "study" ? (direction === "ja-id" ? "例文・音声・文法解説を、自分のペースで確認できます。" : "Baca contoh dan penjelasan sesuai kecepatan Anda.") : (direction === "ja-id" ? "開始するとすぐ翻訳問題が出ます。回答中も選択式とキーボード入力を切り替えられます。" : "Langsung mulai soal terjemahan. Pilih opsi atau ketik jawaban.")}</p><div className="curriculum-header"><div><div className="section-kicker">STRUCTURED CURRICULUM</div><h2>{direction === "ja-id" ? `${lessons.length}の学び、2つの視点。` : `${lessons.length} pelajaran, dua sudut pandang.`}</h2></div><p className="curriculum-note">{direction === "ja-id" ? "基礎48 + 文の組み立て128 + 場面ミッション16" : "48 dasar + 128 latihan pola + 16 misi situasi"}</p></div>
-        <div className="course-filters">
+        <p className="mode-description">{view === "study" ? (direction === "ja-id" ? "例文・音声・文法解説を、自分のペースで確認できます。" : "Baca contoh dan penjelasan sesuai kecepatan Anda.") : (direction === "ja-id" ? "まずは「学習を続ける」から。選択・入力・文章タイル・聞き取りで練習できます。" : "Lanjutkan jalur belajar dengan pilihan, mengetik, dan menyimak.")}</p><div className="curriculum-header" hidden={view === "lesson" && !catalogOpen}><div><div className="section-kicker">STRUCTURED CURRICULUM</div><h2>{direction === "ja-id" ? `${lessons.length}の学び、2つの視点。` : `${lessons.length} pelajaran, dua sudut pandang.`}</h2></div><p className="curriculum-note">{direction === "ja-id" ? "基礎48 + 文の組み立て128 + 場面ミッション16" : "48 dasar + 128 latihan pola + 16 misi situasi"}</p></div>
+        <div className="course-filters" hidden={view === "lesson" && !catalogOpen}>
           <label>{direction === "ja-id" ? "教材を検索" : "Cari pelajaran"}<input type="search" value={search} onChange={e => { setSearch(e.target.value); setVisibleCount(12); }} placeholder={direction === "ja-id" ? "助詞、チャット、baca…" : "partikel, chat, baca…"} /></label>
           <label>{direction === "ja-id" ? "レベル" : "Tingkat"}<select value={courseLevel} onChange={e => { setCourseLevel(e.target.value); setVisibleCount(12); }}><option value="All">All</option>{["A1", "A2", "B1"].map(value => <option key={value}>{value}</option>)}</select></label>
           <label>{direction === "ja-id" ? "テーマ" : "Tema"}<select value={category} onChange={e => { setCategory(e.target.value); setVisibleCount(12); }}><option value="All">All</option>{categories.map(value => <option key={value}>{value}</option>)}</select></label>
           <span role="status">{filteredLessons.length} {direction === "ja-id" ? "レッスン" : "pelajaran"}</span>
         </div>
-        {view === "lesson" && <><CultureBanner/><div className="stage-path"><h2>{direction === "ja-id" ? "ステージを進めよう" : "Lanjutkan tahap belajar"}</h2><p>{direction === "ja-id" ? "6レッスンで1ステージ。HP・回数制限なしで何度でも挑戦できます。" : "Enam pelajaran per tahap. Tanpa HP atau batas percobaan."}</p>{Array.from({length:Math.ceil(lessons.length/6)},(_,stage)=>{const batch=lessons.slice(stage*6,stage*6+6);const done=batch.filter(l=>completed.has(l.id)).length;const next=batch.find(l=>!completed.has(l.id))??batch[0];return <button key={stage} className={done===batch.length?"stage complete":"stage"} onClick={()=>openLesson(next)}><StageSeal number={stage+1} done={done} total={batch.length}/><strong>Stage {stage+1}</strong><small>{done} / {batch.length}</small></button>})}</div></>}<div className="lesson-grid">
+        {view === "lesson" && <><LearningJourney key={direction} direction={direction} completed={completed} onStart={openLesson} xp={learning.stats.xp} streak={learning.stats.streak}/><button className="catalog-toggle outline-button" aria-expanded={catalogOpen} onClick={()=>setCatalogOpen(value=>!value)}>{direction === "ja-id" ? (catalogOpen ? "教材一覧を閉じる" : "教材一覧から選ぶ") : (catalogOpen ? "Tutup daftar" : "Pilih dari daftar")}</button></>}<div className="lesson-grid" hidden={view === "lesson" && !catalogOpen}>
           {filteredLessons.slice(0, visibleCount).map((lesson) => {
             const isDone = completed.has(lesson.id);
             const score = learning.lessonScores[`${direction}:${lesson.id}`] ?? (direction === "ja-id" ? learning.lessonScores[lesson.id] : undefined);
@@ -518,7 +549,7 @@ export function JendyApp({ view }: { view: PageView }) {
         </div>
       </section>
 
-      {filteredLessons.length > visibleCount && <div className="more-lessons"><button className="outline-button" onClick={() => setVisibleCount(count => count + 12)}>{direction === "ja-id" ? "さらに12レッスンを見る" : "Lihat 12 pelajaran lagi"} ↓</button></div>}
+      {(view === "study" || catalogOpen) && filteredLessons.length > visibleCount && <div className="more-lessons"><button className="outline-button" onClick={() => setVisibleCount(count => count + 12)}>{direction === "ja-id" ? "さらに12レッスンを見る" : "Lihat 12 pelajaran lagi"} ↓</button></div>}
       {!filteredLessons.length && <p className="no-lessons" role="status">{direction === "ja-id" ? "条件に合う教材がありません。検索や絞り込みを変更してください。" : "Tidak ada pelajaran yang cocok. Ubah pencarian atau filter."}</p>}
       </>}
       {view === "review" && <section className="review-section" id="review">
@@ -535,7 +566,7 @@ export function JendyApp({ view }: { view: PageView }) {
       </section>}
 
       {activeLesson && <div className="modal-backdrop lesson-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeLesson(); }}>
-        <div ref={modalRef} className="lesson-player" role="dialog" aria-modal="true" aria-labelledby="lesson-title" tabIndex={-1}>
+        <div ref={modalRef} className={view === "study" ? "lesson-player" : "lesson-player immersion-player"} role="dialog" aria-modal="true" aria-labelledby="lesson-title" tabIndex={-1}>
           <button className="modal-close" aria-label={direction === "ja-id" ? "閉じる" : "Tutup"} onClick={closeLesson}>×</button>
           <div className="player-header"><div><span>{activeLesson.level}</span><h2 id="lesson-title">{direction === "ja-id" ? activeLesson.titleJa : activeLesson.titleId}</h2></div><div className="phase-pills"><span className="active">{view === "study" ? (direction === "ja-id" ? "学習モード" : "Mode belajar") : lessonPhase === "result" ? (direction === "ja-id" ? "結果" : "Hasil") : (direction === "ja-id" ? "翻訳問題" : "Terjemahan")}</span></div></div>
 
@@ -544,9 +575,9 @@ export function JendyApp({ view }: { view: PageView }) {
             <div className="phrase-player"><div className="phrase-progress"><span>{phraseIndex + 1} / {activeLesson.phrases.length}</span><div><i style={{ width: `${((phraseIndex + 1) / activeLesson.phrases.length) * 100}%` }} /></div></div><small>{sourceText(direction, activeLesson.phrases[phraseIndex])}</small><strong>{targetText(direction, activeLesson.phrases[phraseIndex])}</strong>{activeLesson.phrases[phraseIndex].reading && direction === "ja-id" && <em>{activeLesson.phrases[phraseIndex].reading}</em>}<p>{direction === "ja-id" ? activeLesson.phrases[phraseIndex].noteJa : activeLesson.phrases[phraseIndex].noteId}</p><ExpressionCard key={`${activeLesson.id}:${phraseIndex}:${direction}`} phrase={activeLesson.phrases[phraseIndex]} direction={direction} onSave={() => setLearning(current => upsertReviewItem(current, { lessonId: activeLesson.id, phraseIndex, direction }))} /><div className="player-actions"><button className="audio-button" onClick={() => speak(targetText(direction, activeLesson.phrases[phraseIndex]))}><Icon name="volume" size={19} />{direction === "ja-id" ? "発音" : "Audio"}</button><button className="next-button" onClick={nextPhrase}>{phraseIndex === activeLesson.phrases.length - 1 ? (direction === "ja-id" ? "学習を終える" : "Selesai belajar") : (direction === "ja-id" ? "次へ" : "Berikutnya")}<Icon name="arrow" size={18} /></button></div></div>
           </div>}
 
-          {lessonPhase === "quiz" && (() => { const question = activeLesson.quiz[quizIndex]; const choices = quizChoices; const expected = direction === "ja-id" ? question.answerId : question.answerJa; return <div className="quiz-stage"><div className="quiz-progress"><span>QUESTION {quizIndex + 1} / {activeLesson.quiz.length}</span><strong>{quizScore} pts</strong></div><LessonQuestion key={`${question.id}:${direction}`} question={question} direction={direction} choices={choices} answered={Boolean(selectedAnswer)} selected={selectedAnswer ?? undefined} mode={answerMode} onMode={setAnswerMode} onAnswer={answerQuestion} />{selectedAnswer && <div role="status" aria-live="polite" className={`quiz-feedback ${answerCorrect ? "correct" : "wrong"}`}><strong>{answerCorrect ? (direction === "ja-id" ? "正解" : "Benar") : (direction === "ja-id" ? "もう一歩" : "Belum tepat")}</strong><p className="model-answer">{expected}</p>{answerMode === "keyboard" && !answerCorrect && <p>{direction === "ja-id" ? "模範例と一致しませんでした。別の正しい訳もあり、この照合だけで文法の誤りとは断定できません。" : "Jawaban berbeda dari contoh. Terjemahan lain juga bisa benar."}</p>}<p>{direction === "ja-id" ? question.explanationJa : question.explanationId}</p><button className="next-button" onClick={nextQuestion}>{quizIndex === activeLesson.quiz.length - 1 ? (direction === "ja-id" ? "結果を見る" : "Lihat hasil") : (direction === "ja-id" ? "次の問題" : "Soal berikutnya")}<Icon name="arrow" size={18} /></button></div>}</div>; })()}
+          {lessonPhase === "quiz" && (() => { const question = activeLesson.quiz[quizIndex]; const choices = quizChoices; const expected = direction === "ja-id" ? question.answerId : question.answerJa; return <div className="quiz-stage"><div className="quiz-progress"><span>{repairQueue.length ? (direction === "ja-id" ? "間違いを解き直そう" : "Perbaiki kesalahan") : `QUESTION ${quizIndex + 1} / ${activeLesson.quiz.length}`}</span><strong>{combo > 1 ? `${combo} ${direction === "ja-id" ? "連続正解" : "beruntun"}` : `${quizScore} pts`}</strong></div><progress className="lesson-progress" aria-label={direction === "ja-id" ? "レッスン進捗" : "Progres pelajaran"} max={repairQueue.length || activeLesson.quiz.length} value={repairQueue.length ? repairPosition : quizIndex}/ ><LessonQuestion key={`${question.id}:${direction}`} question={question} direction={direction} choices={choices} answered={Boolean(selectedAnswer)} selected={selectedAnswer ?? undefined} mode={answerMode === "tiles" && direction === "id-ja" ? "keyboard" : answerMode} onMode={setAnswerMode} onAnswer={answerQuestion} />{selectedAnswer && <div role="status" aria-live="polite" className={`quiz-feedback ${answerCorrect ? "correct" : "wrong"}`}><strong>{answerCorrect ? (direction === "ja-id" ? "正解" : "Benar") : (direction === "ja-id" ? "もう一歩" : "Belum tepat")}</strong><p className="model-answer">{expected}</p>{answerMode !== "choose" && !answerCorrect && <p>{direction === "ja-id" ? "模範例と一致しませんでした。別の正しい訳もあり、この照合だけで文法の誤りとは断定できません。" : "Jawaban berbeda dari contoh. Terjemahan lain juga bisa benar."}</p>}<p>{direction === "ja-id" ? question.explanationJa : question.explanationId}</p><button className="next-button" onClick={nextQuestion}>{!repairQueue.length && quizIndex === activeLesson.quiz.length - 1 ? (direction === "ja-id" ? "結果を見る" : "Lihat hasil") : (direction === "ja-id" ? "次の問題" : "Soal berikutnya")}<Icon name="arrow" size={18} /></button></div>}</div>; })()}
 
-          {lessonPhase === "result" && <div className="result-stage"><div className={`result-ring ${lessonScore >= 67 ? "pass" : ""}`}><strong>{lessonScore}%</strong><span>{lessonScore >= 67 ? "PASS" : "RETRY"}</span></div><h3>{lessonScore >= 67 ? (direction === "ja-id" ? "レッスン完了" : "Pelajaran selesai") : (direction === "ja-id" ? "もう一度挑戦" : "Coba lagi")}</h3><p>{lessonScore >= 67 ? (direction === "ja-id" ? "解いた表現は復習に追加しました。次のレッスンに進むか、あとで復習しましょう。" : "Contoh sudah masuk antrean SRS dan akan muncul lagi sesuai jadwal ulasan.") : (direction === "ja-id" ? "67%以上で完了です。間違えたポイントを確認して再挑戦しましょう。" : "Butuh 67% untuk lulus. Tinjau lalu coba lagi.")}</p><div className="result-actions"><button className="outline-button" onClick={retryLessonQuiz}>{direction === "ja-id" ? "クイズ再挑戦" : "Ulangi kuis"}</button>{lessonScore >= 67 && followingLesson && <button className="next-button" onClick={() => openLesson(followingLesson)}>{direction === "ja-id" ? "次のレッスンへ" : "Pelajaran berikutnya"}<Icon name="arrow" size={18} /></button>}<button className="outline-button" onClick={closeLesson}>{direction === "ja-id" ? "一覧に戻る" : "Kembali ke daftar"}</button></div></div>}
+          {lessonPhase === "result" && <div className="result-stage"><div className={`result-ring ${lessonScore >= 67 ? "pass" : ""}`}><strong>{lessonScore}%</strong><span>{lessonScore >= 67 ? "PASS" : "RETRY"}</span></div><h3>{lessonScore >= 67 ? (direction === "ja-id" ? "レッスン完了" : "Pelajaran selesai") : (direction === "ja-id" ? "もう一度挑戦" : "Coba lagi")}</h3><p>{lessonScore >= 67 ? (direction === "ja-id" ? "解いた表現は復習に追加しました。次のレッスンに進むか、あとで復習しましょう。" : "Contoh sudah masuk antrean SRS dan akan muncul lagi sesuai jadwal ulasan.") : (direction === "ja-id" ? "67%以上で完了です。間違えたポイントを確認して再挑戦しましょう。" : "Butuh 67% untuk lulus. Tinjau lalu coba lagi.")}</p><div className="result-metrics"><div><strong>{quizScore}/{activeLesson.quiz.length}</strong><span>{direction === "ja-id" ? "初回の正解" : "Benar pertama"}</span></div><div><strong>{bestCombo}</strong><span>{direction === "ja-id" ? "最高連続正解" : "Terbaik beruntun"}</span></div></div>{mistakes.length > 0 && <button className="repair-button primary-button" onClick={repairMistakes}>{direction === "ja-id" ? `間違えた${mistakes.length}問を解き直す` : `Ulangi ${mistakes.length} kesalahan`}</button>}<div className="result-actions"><button className="outline-button" onClick={retryLessonQuiz}>{direction === "ja-id" ? "クイズ再挑戦" : "Ulangi kuis"}</button>{lessonScore >= 67 && followingLesson && <button className="next-button" onClick={() => openLesson(followingLesson)}>{direction === "ja-id" ? "次のレッスンへ" : "Pelajaran berikutnya"}<Icon name="arrow" size={18} /></button>}<button className="outline-button" onClick={closeLesson}>{direction === "ja-id" ? "一覧に戻る" : "Kembali ke daftar"}</button></div></div>}
         </div>
       </div>}
 
