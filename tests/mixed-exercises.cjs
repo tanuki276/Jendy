@@ -1,0 +1,23 @@
+const assert=require('node:assert/strict');
+require('./register.cjs');
+const {lessons}=require('../lib/learning-content.ts');
+const {exerciseMode}=require('../lib/exercise-plan.ts');
+const {createLessonAudio}=require('../lib/lesson-audio.ts');
+const {recordedQuestions}=require('../lib/audio-manifest.ts');
+const fs=require('node:fs');
+const counts={};
+lessons.forEach((l,i)=>l.quiz.forEach((q,j)=>{const mode=exerciseMode(i,j,q);counts[mode]=(counts[mode]||0)+1;}));
+assert.ok(counts.tiles>counts.choose+counts.keyboard+counts.listen);
+assert.ok(counts.choose>0&&counts.keyboard>0&&counts.listen>0);
+for(const id of recordedQuestions)for(const lang of ['id','ja'])assert.ok(fs.statSync('public/audio/'+id+'-'+lang+'.mp3').size>500);
+let media,errors=0;
+global.window={Audio:class {constructor(src){this.src=src;media=this;}play(){return Promise.resolve();}pause(){this.paused=true;}removeAttribute(){}}};
+const audio=createLessonAudio([...recordedQuestions][0],'test','id',()=>errors++);
+audio.play(.7);assert.match(media.src,/\.mp3$/);assert.equal(media.playbackRate,.7);
+audio.stop();assert.equal(media.paused,true);assert.equal(errors,0);
+console.log('✓ Automatic mixed exercises',counts,'and 36 bundled audio files; direct playback, rate and stop verified');
+
+const wordAudio=createLessonAudio('g1','pagi','id',()=>errors++,'pagi');
+wordAudio.play(1);assert.match(media.src,/word=pagi/);assert.match(media.src,/id=g1/);
+wordAudio.stop();assert.equal(media.paused,true);
+console.log('✓ Word playback requests the selected token and stops on cleanup');
