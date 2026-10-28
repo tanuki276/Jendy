@@ -1,6 +1,7 @@
 const assert=require('node:assert/strict');
 const {JSDOM}=require('jsdom');
 const dom=new JSDOM('<!doctype html><div id="root"></div>',{url:'http://localhost/lesson'});
+let lastAudio;dom.window.Audio=class{constructor(src){this.src=src;lastAudio=this;}play(){return Promise.resolve();}pause(){}removeAttribute(){}};
 global.self=dom.window;global.window=dom.window;global.document=dom.window.document;global.HTMLElement=dom.window.HTMLElement;global.localStorage=dom.window.localStorage;global.IS_REACT_ACT_ENVIRONMENT=true;
 require('./register.cjs');const React=require('react');const {act}=React;const {createRoot}=require('react-dom/client');
 const {AppRouterContext}=require('next/dist/shared/lib/app-router-context.shared-runtime');
@@ -85,7 +86,9 @@ click(button('クイズ再挑戦'));click(button('文章タイル'));
 const words=lessons[0].quiz[0].answerId.split(/\s+/);
 assert.equal(button('答えを確認').disabled,true);
 for(const word of words)click([...document.querySelectorAll('.tile-bank button')].find(b=>!b.disabled&&b.textContent===word));
+assert.ok(lastAudio.src.includes('&word='+encodeURIComponent(words.at(-1))));
 click(document.querySelector('.tile-answer button'));
+assert.ok(lastAudio.src.includes('&word='+encodeURIComponent(words[0])));
 assert.equal(button('答えを確認').disabled,true);
 // Restart tile selection via mode switch.
 click(button('選択式'));click(button('文章タイル'));

@@ -16,3 +16,8 @@ const audio=createLessonAudio([...recordedQuestions][0],'test','id',()=>errors++
 audio.play(.7);assert.match(media.src,/\.mp3$/);assert.equal(media.playbackRate,.7);
 audio.stop();assert.equal(media.paused,true);assert.equal(errors,0);
 console.log('✓ Automatic mixed exercises',counts,'and 36 bundled audio files; direct playback, rate and stop verified');
+
+const wordAudio=createLessonAudio('g1','pagi','id',()=>errors++,'pagi');
+wordAudio.play(1);assert.match(media.src,/word=pagi/);assert.match(media.src,/id=g1/);
+wordAudio.stop();assert.equal(media.paused,true);
+console.log('✓ Word playback requests the selected token and stops on cleanup');

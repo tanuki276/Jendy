@@ -1,5 +1,5 @@
 import { recordedQuestions } from './audio-manifest';
-export function createLessonAudio(questionId:string,text:string,language:'id'|'ja',onError:()=>void){
+export function createLessonAudio(questionId:string,text:string,language:'id'|'ja',onError:()=>void,word?:string){
  let stopped=false;let media:HTMLAudioElement|null=null;let utterance:SpeechSynthesisUtterance|null=null;let generation=0;let timer:ReturnType<typeof setTimeout>|undefined;
  function cancel(){generation++;if(timer)clearTimeout(timer);if(media){media.pause();media.removeAttribute('src');media=null;}if(utterance){utterance.onerror=null;utterance=null;}if('speechSynthesis' in window)window.speechSynthesis.cancel();}
  function fallback(rate:number,token:number){
@@ -18,7 +18,7 @@ export function createLessonAudio(questionId:string,text:string,language:'id'|'j
  }
  return {play(rate:number){cancel();stopped=false;const token=generation;
   if(typeof window.Audio==='function'){
-   media=new window.Audio(recordedQuestions.has(questionId)?'/audio/'+questionId+'-'+language+'.mp3':'/api/audio?id='+encodeURIComponent(questionId)+'&lang='+language);media.playbackRate=rate;media.onerror=()=>fallback(rate,token);void media.play().catch(()=>fallback(rate,token));
+   media=new window.Audio(!word&&recordedQuestions.has(questionId)?'/audio/'+questionId+'-'+language+'.mp3':'/api/audio?id='+encodeURIComponent(questionId)+'&lang='+language+(word?'&word='+encodeURIComponent(word):''));media.playbackRate=rate;media.onerror=()=>fallback(rate,token);void media.play().catch(()=>fallback(rate,token));
   }else fallback(rate,token);
  },stop(){stopped=true;cancel();}};
 }

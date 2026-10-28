@@ -3,7 +3,11 @@ const questions = new Map(lessons.flatMap(lesson=>lesson.quiz.map(question=>[que
 export async function GET(request:Request) {
  const url=new URL(request.url);const question=questions.get(url.searchParams.get('id')??'');const language=url.searchParams.get('lang');
  if(!question||(language!=='ja'&&language!=='id'))return new Response('Unknown lesson audio',{status:400});
- const text=language==='id'?question.answerId:question.answerJa;
+ const sentence=language==='id'?question.answerId:question.answerJa;
+ const word=url.searchParams.get('word');
+ const tokens=language==='id'?sentence.split(/\s+/):Array.from(new Intl.Segmenter('ja',{granularity:'word'}).segment(sentence),s=>s.segment);
+ if(word!==null&&(!word.trim()||!tokens.includes(word)))return new Response('Unknown lesson word',{status:400});
+ const text=word??sentence;
  if(text.length>200)return new Response('Sentence exceeds audio limit',{status:422});
  const endpoint=new URL('https://translate.google.com/translate_tts');
  endpoint.search=new URLSearchParams({ie:'UTF-8',client:'tw-ob',tl:language,q:text}).toString();
