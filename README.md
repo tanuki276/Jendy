@@ -104,3 +104,15 @@ Legacy quiz prompts consistently specify translation into Indonesian or Japanese
 
 ## Starter progression and integrated review
 198 lessons / 978 authored question pairs (1,956 directions). Six starter lessons begin with Saya and Kamu and build toward a greeting plus name and nationality. Standard lesson attempts contain 12 exercises: new expressions, repeated current expressions, and review sampled only from previously completed earlier lessons. Repetition is intentional and is not counted as new authored content. Review answers save to their original lesson/phrase SRS item.
+
+### Adaptive learning and language support
+
+Normal lessons now choose earlier review expressions using due dates and failed recall,
+while preserving the Saya/Kamu-first introduction and 12-question panel-first sessions.
+Daily goals (6/12/24 questions) persist locally. The dictionary searches all 978 paired
+examples, including Indonesian root matches with `@orama/stemmers`; WanaKana supplies
+explicit kana conversion and kana-only readings. Root matching is never used to grade
+answers. Third-party license texts are served under `/licenses/`.
+
+See [release readiness](docs/release-readiness.md) for verified behavior and remaining
+real-device, audio-provider, content-review and account-flow release gates.
