@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "node tests/run.cjs && node tests/game.cjs && node tests/lesson-flow.cjs && node tests/mixed-exercises.cjs && node tests/sound-effects.cjs",
+    "test": "node tests/run.cjs && node tests/game.cjs && node tests/lesson-flow.cjs && node tests/mixed-exercises.cjs && node tests/sound-effects.cjs && node tests/speaking-listening.cjs",
     "content:export": "node scripts/export-course.cjs",
     "test:routes": "node tests/routes.cjs",
     "test:browser": "node tests/browser.cjs"
