@@ -1,6 +1,7 @@
 "use client";
 
-import { exerciseMode } from "@/lib/exercise-plan";
+import { playEffect, effectsMuted, setEffectsMuted } from "@/lib/sound-effects";
+import { buildExercisePlan, type ExerciseMode } from "@/lib/exercise-plan";
 import { LearningJourney } from "./LearningJourney";
 import { LessonQuestion, type AnswerMode } from "./LessonQuestion";
 import { normalizeRecall } from "@/lib/practice";
@@ -125,6 +126,8 @@ export function JendyApp({ view }: { view: PageView }) {
   const [lessonPhase, setLessonPhase] = useState<LessonPhase>("learn");
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [quizIndex, setQuizIndex] = useState(0);
+  const [effectsOff,setEffectsOff]=useState(false);
+  const [exercisePlan,setExercisePlan]=useState<ExerciseMode[]>([]);
   const [answerMode, setAnswerMode] = useState<AnswerMode>("tiles");
   const [mistakes, setMistakes] = useState<number[]>([]);
   const [repairQueue, setRepairQueue] = useState<number[]>([]);
@@ -168,13 +171,14 @@ export function JendyApp({ view }: { view: PageView }) {
     } catch {
       // Defaults keep the app usable.
     }
+    setEffectsOff(effectsMuted());
     setLearning(loadLearningState());
     setStorageReady(true);
   }, []);
 
   useEffect(() => {
-    if (activeLesson) setAnswerMode(exerciseMode(lessons.indexOf(activeLesson), quizIndex, activeLesson.quiz[quizIndex]));
-  }, [activeLesson, quizIndex, repairPosition]);
+    if (activeLesson) setAnswerMode(exercisePlan[quizIndex]??"tiles");
+  }, [activeLesson, quizIndex, repairPosition, exercisePlan]);
 
   useEffect(() => {
     if (!activeLesson) return;
@@ -278,6 +282,7 @@ export function JendyApp({ view }: { view: PageView }) {
 
   function openLesson(lesson: Lesson) {
     setMistakes([]); setRepairQueue([]); setRepairPosition(0); setCombo(0); setBestCombo(0);
+    setExercisePlan(buildExercisePlan(lesson.quiz));
     setActiveLesson(lesson);
     setLessonPhase(view === "study" ? "learn" : "quiz");
     setPhraseIndex(0);
@@ -309,6 +314,7 @@ export function JendyApp({ view }: { view: PageView }) {
     const question = activeLesson.quiz[quizIndex];
     const expected = direction === "ja-id" ? question.answerId : question.answerJa;
     const correct = normalizeRecall(choice) === normalizeRecall(expected);
+    playEffect(correct ? "correct" : "wrong");
     setSelectedAnswer(choice);
     setAnswerCorrect(correct);
     if (correct) {
@@ -346,6 +352,9 @@ export function JendyApp({ view }: { view: PageView }) {
     setLessonPhase("result");
 
     if (score >= 67) {
+      const stageStart=Math.floor(lessons.indexOf(activeLesson)/6)*6;
+      const batch=lessons.slice(stageStart,stageStart+6);
+      playEffect(!completed.has(activeLesson.id)&&batch.every(item=>item.id===activeLesson.id||completed.has(item.id))?'stage':'complete');
       const nextCompleted = new Set([...completed, activeLesson.id]);
       setCompleted(nextCompleted);
       writeLocalProgress(direction, nextCompleted);
@@ -375,6 +384,7 @@ export function JendyApp({ view }: { view: PageView }) {
   }
 
   function retryLessonQuiz() {
+    if(activeLesson)setExercisePlan(buildExercisePlan(activeLesson.quiz));
     setMistakes([]); setRepairQueue([]); setRepairPosition(0); setCombo(0); setBestCombo(0);
     setLessonPhase("quiz");
     setQuizIndex(0);
@@ -454,7 +464,7 @@ export function JendyApp({ view }: { view: PageView }) {
             ["review", "/review", "復習", "Ulasan"],
           ] as const).map(([page, href, ja, id]) => <Link key={href} href={href} aria-current={view === page ? "page" : undefined}>{direction === "ja-id" ? ja : id}</Link>)}
         </nav>
-        <div className="header-actions">
+        <div className="header-actions"><button className="effects-toggle" aria-pressed={!effectsOff} onClick={()=>{const next=!effectsOff;setEffectsOff(next);setEffectsMuted(next);if(!next)playEffect("correct");}}>{direction==="ja-id"?(effectsOff?"効果音 OFF":"効果音 ON"):(effectsOff?"Efek OFF":"Efek ON")}</button>
           <button className="direction-mini" onClick={switchDirection}><Icon name="swap" size={17} /><span>{direction === "ja-id" ? "JA → ID" : "ID → JA"}</span></button>
           {user ? <button className="ghost-button" onClick={signOut}><Icon name="logout" size={17} />{direction === "ja-id" ? "ログアウト" : "Keluar"}</button> : <Link className="ghost-button" href="/login" aria-current={view === "login" ? "page" : undefined}><Icon name="login" size={17} />{direction === "ja-id" ? "ログイン" : "Masuk"}</Link>}
         </div>
@@ -504,7 +514,7 @@ export function JendyApp({ view }: { view: PageView }) {
         <button onClick={switchDirection}><strong>{copy.source}</strong><Icon name="arrow" size={18} /><strong>{copy.target}</strong><span className="switch-hint"><Icon name="swap" size={15} />{direction === "ja-id" ? "逆方向へ" : "Balik arah"}</span></button>
       </section>}
 
-      {view === "practice" && <PracticeLab key={direction} direction={direction} onAnswer={(correct, lessonId, phraseIndex) => setLearning(current => upsertReviewItem(recordAnswer(current, correct), { lessonId, phraseIndex, direction }))} />}
+      {view === "practice" && <PracticeLab key={direction} direction={direction} onAnswer={(correct, lessonId, phraseIndex) => {playEffect(correct?"correct":"wrong");setLearning(current => upsertReviewItem(recordAnswer(current, correct), { lessonId, phraseIndex, direction }));}} />}
       {view === "dictionary" && <WordNetwork direction={direction} />}
 
       {view === "dashboard" && <section className="dashboard-section" id="dashboard">
