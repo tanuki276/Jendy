@@ -1,8 +1,380 @@
 # Jendy: complete question catalog
 
-Generated from the shipped lesson data. 192 lessons, 960 question pairs, 1920 directional questions.
+Generated from the shipped lesson data. 198 lessons, 978 question pairs, 1956 directional questions.
 
 Every option, answer, and explanation is included below. This export does not create extra questions.
+
+## A1 · 入門1 — 私とあなた / Saya dan kamu
+
+ID: starter-1
+
+Saya は私、Kamu はあなた。名前を続けるだけで自己紹介できます。
+
+Bangun kalimat sedikit demi sedikit, dari kata ganti hingga perkenalan.
+
+### starter-1-q0
+
+**JA → ID:** 「私」をインドネシア語にしてください。
+
+- Saya ✓
+- Kamu
+- Saya Taro
+
+Saya＝私、Kamu＝あなた。日本語の「は・です」に当たる語を毎回入れる必要はありません。
+
+**ID → JA:** Terjemahkan “Saya” ke bahasa Jepang.
+
+- 私 ✓
+- あなた
+- 私は太郎です
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+### starter-1-q1
+
+**JA → ID:** 「あなた」をインドネシア語にしてください。
+
+- Saya
+- Kamu ✓
+- Saya Taro
+
+Saya＝私、Kamu＝あなた。日本語の「は・です」に当たる語を毎回入れる必要はありません。
+
+**ID → JA:** Terjemahkan “Kamu” ke bahasa Jepang.
+
+- 私
+- あなた ✓
+- 私は太郎です
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+### starter-1-q2
+
+**JA → ID:** 「私は太郎です」をインドネシア語にしてください。
+
+- Saya
+- Kamu
+- Saya Taro ✓
+
+Saya＝私、Kamu＝あなた。日本語の「は・です」に当たる語を毎回入れる必要はありません。
+
+**ID → JA:** Terjemahkan “Saya Taro” ke bahasa Jepang.
+
+- 私
+- あなた
+- 私は太郎です ✓
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+## A1 · 入門2 — 私がする・あなたがする / Saya dan kamu melakukan
+
+ID: starter-2
+
+主語＋動詞＋目的語の順。Saya と Kamu を入れ替えて練習しましょう。
+
+Bangun kalimat sedikit demi sedikit, dari kata ganti hingga perkenalan.
+
+### starter-2-q0
+
+**JA → ID:** 「私は食べます」をインドネシア語にしてください。
+
+- Saya makan ✓
+- Kamu makan
+- Saya minum
+
+Saya／Kamu が主語、makan＝食べる、minum＝飲む。air＝水、kopi＝コーヒー、nasi＝ご飯を動詞の後に置きます。
+
+**ID → JA:** Terjemahkan “Saya makan” ke bahasa Jepang.
+
+- 私は食べます ✓
+- あなたは食べます
+- 私は飲みます
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+### starter-2-q1
+
+**JA → ID:** 「あなたは食べます」をインドネシア語にしてください。
+
+- Saya makan
+- Kamu makan ✓
+- Saya minum
+
+Saya／Kamu が主語、makan＝食べる、minum＝飲む。air＝水、kopi＝コーヒー、nasi＝ご飯を動詞の後に置きます。
+
+**ID → JA:** Terjemahkan “Kamu makan” ke bahasa Jepang.
+
+- 私は食べます
+- あなたは食べます ✓
+- 私は飲みます
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+### starter-2-q2
+
+**JA → ID:** 「私は飲みます」をインドネシア語にしてください。
+
+- Saya makan
+- Kamu makan
+- Saya minum ✓
+
+Saya／Kamu が主語、makan＝食べる、minum＝飲む。air＝水、kopi＝コーヒー、nasi＝ご飯を動詞の後に置きます。
+
+**ID → JA:** Terjemahkan “Saya minum” ke bahasa Jepang.
+
+- 私は食べます
+- あなたは食べます
+- 私は飲みます ✓
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+## A1 · 入門3 — 何を飲む？何を食べる？ / Minum dan makan apa?
+
+ID: starter-3
+
+主語＋動詞＋目的語の順。Saya と Kamu を入れ替えて練習しましょう。
+
+Bangun kalimat sedikit demi sedikit, dari kata ganti hingga perkenalan.
+
+### starter-3-q0
+
+**JA → ID:** 「私は水を飲みます」をインドネシア語にしてください。
+
+- Saya minum air ✓
+- Kamu minum kopi
+- Saya makan nasi
+
+Saya／Kamu が主語、makan＝食べる、minum＝飲む。air＝水、kopi＝コーヒー、nasi＝ご飯を動詞の後に置きます。
+
+**ID → JA:** Terjemahkan “Saya minum air” ke bahasa Jepang.
+
+- 私は水を飲みます ✓
+- あなたはコーヒーを飲みます
+- 私はご飯を食べます
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+### starter-3-q1
+
+**JA → ID:** 「あなたはコーヒーを飲みます」をインドネシア語にしてください。
+
+- Saya minum air
+- Kamu minum kopi ✓
+- Saya makan nasi
+
+Saya／Kamu が主語、makan＝食べる、minum＝飲む。air＝水、kopi＝コーヒー、nasi＝ご飯を動詞の後に置きます。
+
+**ID → JA:** Terjemahkan “Kamu minum kopi” ke bahasa Jepang.
+
+- 私は水を飲みます
+- あなたはコーヒーを飲みます ✓
+- 私はご飯を食べます
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+### starter-3-q2
+
+**JA → ID:** 「私はご飯を食べます」をインドネシア語にしてください。
+
+- Saya minum air
+- Kamu minum kopi
+- Saya makan nasi ✓
+
+Saya／Kamu が主語、makan＝食べる、minum＝飲む。air＝水、kopi＝コーヒー、nasi＝ご飯を動詞の後に置きます。
+
+**ID → JA:** Terjemahkan “Saya makan nasi” ke bahasa Jepang.
+
+- 私は水を飲みます
+- あなたはコーヒーを飲みます
+- 私はご飯を食べます ✓
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+## A1 · 入門4 — 私の名前・あなたの名前 / Nama saya dan nama kamu
+
+ID: starter-4
+
+nama は名前。nama saya で「私の名前」です。
+
+Bangun kalimat sedikit demi sedikit, dari kata ganti hingga perkenalan.
+
+### starter-4-q0
+
+**JA → ID:** 「私の名前」をインドネシア語にしてください。
+
+- Nama saya ✓
+- Nama saya Taro
+- Nama kamu Tini
+
+nama＝名前。nama saya＝私の名前、nama kamu＝あなたの名前。名前はその後に続けます。
+
+**ID → JA:** Terjemahkan “Nama saya” ke bahasa Jepang.
+
+- 私の名前 ✓
+- 私の名前は太郎です
+- あなたの名前はティニです
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+### starter-4-q1
+
+**JA → ID:** 「私の名前は太郎です」をインドネシア語にしてください。
+
+- Nama saya
+- Nama saya Taro ✓
+- Nama kamu Tini
+
+nama＝名前。nama saya＝私の名前、nama kamu＝あなたの名前。名前はその後に続けます。
+
+**ID → JA:** Terjemahkan “Nama saya Taro” ke bahasa Jepang.
+
+- 私の名前
+- 私の名前は太郎です ✓
+- あなたの名前はティニです
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+### starter-4-q2
+
+**JA → ID:** 「あなたの名前はティニです」をインドネシア語にしてください。
+
+- Nama saya
+- Nama saya Taro
+- Nama kamu Tini ✓
+
+nama＝名前。nama saya＝私の名前、nama kamu＝あなたの名前。名前はその後に続けます。
+
+**ID → JA:** Terjemahkan “Nama kamu Tini” ke bahasa Jepang.
+
+- 私の名前
+- 私の名前は太郎です
+- あなたの名前はティニです ✓
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+## A1 · 入門5 — 朝の挨拶を加える / Tambahkan salam pagi
+
+ID: starter-5
+
+学んだ自己紹介に Selamat pagi を加えて、挨拶から名前までつなげます。
+
+Bangun kalimat sedikit demi sedikit, dari kata ganti hingga perkenalan.
+
+### starter-5-q0
+
+**JA → ID:** 「おはようございます」をインドネシア語にしてください。
+
+- Selamat pagi ✓
+- Selamat pagi, saya Taro
+- Selamat pagi, nama saya Tini
+
+Selamat pagi＝おはようございます。nama saya＋名前で自己紹介し、Saya orang＋国名で出身を続けます。
+
+**ID → JA:** Terjemahkan “Selamat pagi” ke bahasa Jepang.
+
+- おはようございます ✓
+- おはようございます、太郎です
+- おはようございます、私の名前はティニです
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+### starter-5-q1
+
+**JA → ID:** 「おはようございます、太郎です」をインドネシア語にしてください。
+
+- Selamat pagi
+- Selamat pagi, saya Taro ✓
+- Selamat pagi, nama saya Tini
+
+Selamat pagi＝おはようございます。nama saya＋名前で自己紹介し、Saya orang＋国名で出身を続けます。
+
+**ID → JA:** Terjemahkan “Selamat pagi, saya Taro” ke bahasa Jepang.
+
+- おはようございます
+- おはようございます、太郎です ✓
+- おはようございます、私の名前はティニです
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+### starter-5-q2
+
+**JA → ID:** 「おはようございます、私の名前はティニです」をインドネシア語にしてください。
+
+- Selamat pagi
+- Selamat pagi, saya Taro
+- Selamat pagi, nama saya Tini ✓
+
+Selamat pagi＝おはようございます。nama saya＋名前で自己紹介し、Saya orang＋国名で出身を続けます。
+
+**ID → JA:** Terjemahkan “Selamat pagi, nama saya Tini” ke bahasa Jepang.
+
+- おはようございます
+- おはようございます、太郎です
+- おはようございます、私の名前はティニです ✓
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+## A1 · 入門6 — 挨拶と自己紹介をつなぐ / Salam dan perkenalan
+
+ID: starter-6
+
+学んだ自己紹介に Selamat pagi を加えて、挨拶から名前までつなげます。
+
+Bangun kalimat sedikit demi sedikit, dari kata ganti hingga perkenalan.
+
+### starter-6-q0
+
+**JA → ID:** 「おはようございます、私の名前は太郎です」をインドネシア語にしてください。
+
+- Selamat pagi, nama saya Taro ✓
+- Saya orang Jepang
+- Selamat pagi, nama saya Tini. Saya orang Indonesia
+
+Selamat pagi＝おはようございます。nama saya＋名前で自己紹介し、Saya orang＋国名で出身を続けます。
+
+**ID → JA:** Terjemahkan “Selamat pagi, nama saya Taro” ke bahasa Jepang.
+
+- おはようございます、私の名前は太郎です ✓
+- 私は日本人です
+- おはようございます、私の名前はティニです。私はインドネシア人です
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+### starter-6-q1
+
+**JA → ID:** 「私は日本人です」をインドネシア語にしてください。
+
+- Selamat pagi, nama saya Taro
+- Saya orang Jepang ✓
+- Selamat pagi, nama saya Tini. Saya orang Indonesia
+
+Selamat pagi＝おはようございます。nama saya＋名前で自己紹介し、Saya orang＋国名で出身を続けます。
+
+**ID → JA:** Terjemahkan “Saya orang Jepang” ke bahasa Jepang.
+
+- おはようございます、私の名前は太郎です
+- 私は日本人です ✓
+- おはようございます、私の名前はティニです。私はインドネシア人です
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
+
+### starter-6-q2
+
+**JA → ID:** 「おはようございます、私の名前はティニです。私はインドネシア人です」をインドネシア語にしてください。
+
+- Selamat pagi, nama saya Taro
+- Saya orang Jepang
+- Selamat pagi, nama saya Tini. Saya orang Indonesia ✓
+
+Selamat pagi＝おはようございます。nama saya＋名前で自己紹介し、Saya orang＋国名で出身を続けます。
+
+**ID → JA:** Terjemahkan “Selamat pagi, nama saya Tini. Saya orang Indonesia” ke bahasa Jepang.
+
+- おはようございます、私の名前は太郎です
+- 私は日本人です
+- おはようございます、私の名前はティニです。私はインドネシア人です ✓
+
+Gabungkan kata yang sudah dipelajari. Saya berarti 私, kamu berarti あなた.
 
 ## A1 · 01 — あいさつと自己紹介 / Salam & perkenalan
 

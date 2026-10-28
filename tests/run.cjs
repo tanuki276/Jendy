@@ -2,7 +2,7 @@
 const assert = require('node:assert/strict');
 require('./register.cjs');
 const { lessons: allLessons } = require('../lib/learning-content.ts');
-const lessons = allLessons.filter(l=>!l.id.startsWith('practice-frame-')&&!l.id.startsWith('scenario-'));
+const lessons = allLessons.filter(l=>!l.id.startsWith('starter-')&&!l.id.startsWith('practice-frame-')&&!l.id.startsWith('scenario-'));
 const { expandedLessons, units } = require('../lib/course-content.ts');
 const { anatomies, families } = require('../lib/language-insights.ts');
 const { buildSession, recordPractice, normalizeRecall, readPracticeStats, practiceBank } = require('../lib/practice.ts');
@@ -20,8 +20,8 @@ test('48 complete lessons with 30 A1 / 12 A2 / 6 B1', () => {
   for (const phrase of lesson.phrases) for (const key of ['ja','id','noteJa','noteId']) assert.ok(phrase[key]?.trim(), `${lesson.id}:${key}`);
  }
 });
-test('all 960 question pairs / 1920 directional questions have a unique correct answer and bilingual explanation', () => {
- assert.equal(practiceBank.length,960);
+test('all 978 question pairs / 1956 directional questions have a unique correct answer and bilingual explanation', () => {
+ assert.equal(practiceBank.length,978);
  const ids = new Set();
  for (const {lesson, question:q} of practiceBank) {
   assert.ok(!ids.has(q.id), q.id); ids.add(q.id);
@@ -65,7 +65,7 @@ test('unlimited sessions have no duplicate questions, respect level, cover the b
   assert.equal(session.length,12);assert.equal(new Set(session.map(i=>i.question.id)).size,12);
   session.forEach(item => seen.add(item.question.id)); schedules.add(session.map(i=>i.question.id).join('|'));
  }
- assert.equal(seen.size,960);assert.ok(schedules.size>290);
+ assert.equal(seen.size,978);assert.ok(schedules.size>290);
  for (const level of ['A1','A2','B1']) assert.ok(buildSession({},'id-ja',level).every(item=>item.lesson.level.startsWith(level)));
 });
 test('weaknesses prioritize the right direction and remain within the selected level', () => {
@@ -115,13 +115,13 @@ test('learning surfaces render on the server in both directions without browser 
    assert.ok(renderToStaticMarkup(React.createElement(ExpressionCard,{phrase,direction})).includes('Why?'));
   }
   assert.ok(renderToStaticMarkup(React.createElement(WordNetwork,{direction})).includes('baca'));
-  assert.ok(renderToStaticMarkup(React.createElement(PracticeLab,{direction,onAnswer:()=>{}})).includes('960'));
+  assert.ok(renderToStaticMarkup(React.createElement(PracticeLab,{direction,onAnswer:()=>{}})).includes('978'));
  }
 });
 test('51 word-order missions preserve bilingual chunks and point to real SRS phrases', () => {
  const {scenarioLessons,wordOrderQuestions}=require('../lib/scenario-course.ts');
  const {tilesFor,matchesOrder,nextHint,retryQuestions}=require('../lib/word-order.ts');
- assert.equal(allLessons.length,192);assert.equal(scenarioLessons.length,16);assert.equal(wordOrderQuestions.length,51);
+ assert.equal(allLessons.length,198);assert.equal(scenarioLessons.length,16);assert.equal(wordOrderQuestions.length,51);
  assert.equal(new Set(wordOrderQuestions.map(q=>q.id)).size,51);
  for(const q of wordOrderQuestions){
   const lesson=allLessons.find(l=>l.id===q.lessonId);assert.ok(lesson);

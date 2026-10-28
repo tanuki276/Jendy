@@ -35,6 +35,7 @@ export type Lesson = {
   quiz: QuizQuestion[];
 };
 
+import { starterLessons } from "./starter-course";
 import { scenarioLessons } from "./scenario-course";
 import { extendedLessons } from "./extended-course";
 import { expandedLessons } from "./course-content";
@@ -177,7 +178,7 @@ for (const lesson of foundationLessons) for (const q of lesson.quiz) {
  q.promptId = `Terjemahkan “${q.answerId}” ke bahasa Jepang.`;
 }
 
-export const lessons: Lesson[] = [...foundationLessons, ...expandedLessons, ...extendedLessons, ...scenarioLessons].sort((a, b) => a.level.slice(0, 2).localeCompare(b.level.slice(0, 2)));
+export const lessons: Lesson[] = [...starterLessons, ...foundationLessons, ...expandedLessons, ...extendedLessons, ...scenarioLessons].sort((a, b) => a.level.slice(0, 2).localeCompare(b.level.slice(0, 2)));
 
 export function getLesson(lessonId: string) {
   return lessons.find((lesson) => lesson.id === lessonId);
