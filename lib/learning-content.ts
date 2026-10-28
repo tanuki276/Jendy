@@ -77,7 +77,7 @@ export const foundationLessons: Lesson[] = [
       { ja: "これは私の本です", id: "Ini buku saya", reading: "i-ni bu-ku sa-ya", noteJa: "所有者は名詞の後ろ。", noteId: "私の本 menempatkan pemilik sebelum benda dengan の, kebalikan dari buku saya." },
     ],
     quiz: [
-      { id: "s1", promptJa: "Saya minum kopi の語順は？", promptId: "Urutan “私はコーヒーを飲みます” dalam bahasa Jepang?", choicesJa: ["私はコーヒーを飲みます", "私は飲みますコーヒーを", "コーヒー私は飲みます"], choicesId: ["Saya minum kopi", "Saya kopi minum", "Minum saya kopi"], answerJa: "私はコーヒーを飲みます", answerId: "Saya minum kopi", explanationJa: "インドネシア語は SVO、日本語は SOV が基本。", explanationId: "Indonesia memakai SVO, Jepang memakai SOV." },
+      { id: "s1", promptJa: "「私はコーヒーを飲みます」をインドネシア語に訳してください。", promptId: "Terjemahkan “Saya minum kopi” ke bahasa Jepang.", choicesJa: ["私はコーヒーを飲みます", "私は飲みますコーヒーを", "コーヒー私は飲みます"], choicesId: ["Saya minum kopi", "Saya kopi minum", "Minum saya kopi"], answerJa: "私はコーヒーを飲みます", answerId: "Saya minum kopi", explanationJa: "インドネシア語は SVO、日本語は SOV が基本。", explanationId: "Indonesia memakai SVO, Jepang memakai SOV." },
       { id: "s2", promptJa: "「彼は本を読みます」は？", promptId: "Apa arti “Dia membaca buku”?", choicesJa: ["彼は本を読みます", "彼は本を書きます", "彼は本を買います"], choicesId: ["Dia membaca buku", "Dia menulis buku", "Dia membeli buku"], answerJa: "彼は本を読みます", answerId: "Dia membaca buku", explanationJa: "membaca = 読む。", explanationId: "membaca berarti membaca." },
       { id: "s3", promptJa: "「これは私の本です」は？", promptId: "Apa arti “Ini buku saya”?", choicesJa: ["これは私の本です", "これはあなたの本です", "これは本ではありません"], choicesId: ["Ini buku saya", "Ini buku Anda", "Ini bukan buku"], answerJa: "これは私の本です", answerId: "Ini buku saya", explanationJa: "buku saya = 私の本。所有者が後ろです。", explanationId: "buku saya menempatkan pemilik setelah benda." },
     ],
@@ -100,7 +100,7 @@ export const foundationLessons: Lesson[] = [
     quiz: [
       { id: "n1", promptJa: "値段を聞く表現は？", promptId: "Bagaimana mengatakan “これはいくらですか？”?", choicesJa: ["これはいくらですか？", "これは何時ですか？", "これは誰ですか？"], choicesId: ["Berapa harganya?", "Jam berapa?", "Siapa ini?"], answerJa: "これはいくらですか？", answerId: "Berapa harganya?", explanationJa: "harga は値段。harganya で「その値段」。", explanationId: "harga berarti harga; berapa harganya menanyakan harga." },
       { id: "n2", promptJa: "Jam tiga は？", promptId: "Apa arti “三時です”?", choicesJa: ["三時です", "三日です", "三人です"], choicesId: ["Jam tiga", "Tiga hari", "Tiga orang"], answerJa: "三時です", answerId: "Jam tiga", explanationJa: "jam は時刻・時間。", explanationId: "jam dipakai untuk menyatakan waktu/jam." },
-      { id: "n3", promptJa: "ribu の意味は？", promptId: "Apa arti “二万ルピア”?", choicesJa: ["千", "百", "十"], choicesId: ["Dua puluh ribu rupiah", "Dua ratus rupiah", "Dua puluh rupiah"], answerJa: "千", answerId: "Dua puluh ribu rupiah", explanationJa: "ribu は千。dua puluh ribu = 20,000。", explanationId: "ribu berarti seribu; dua puluh ribu = 20.000." },
+      { id: "n3", promptJa: "「二万ルピア」をインドネシア語に訳してください。", promptId: "Apa arti “二万ルピア”?", choicesJa: ["二万ルピア", "二百ルピア", "二十ルピア"], choicesId: ["Dua puluh ribu rupiah", "Dua ratus rupiah", "Dua puluh rupiah"], answerJa: "二万ルピア", answerId: "Dua puluh ribu rupiah", explanationJa: "ribu は千。dua puluh ribu = 20,000。", explanationId: "ribu berarti seribu; dua puluh ribu = 20.000." },
     ],
   },
   {
@@ -143,7 +143,7 @@ export const foundationLessons: Lesson[] = [
     quiz: [
       { id: "t1", promptJa: "「駅はどこですか？」は？", promptId: "Apa arti “Stasiun di mana?”", choicesJa: ["駅はどこですか？", "駅は遠いですか？", "駅へ行きますか？"], choicesId: ["Stasiun di mana?", "Stasiun jauh?", "Pergi ke stasiun?"], answerJa: "駅はどこですか？", answerId: "Stasiun di mana?", explanationJa: "di mana は場所を尋ねる表現。", explanationId: "di mana dipakai untuk menanyakan lokasi." },
       { id: "t2", promptJa: "「ここで降ります」は？", promptId: "Apa arti “Saya turun di sini”?", choicesJa: ["ここで降ります", "ここで待ちます", "ここで食べます"], choicesId: ["Saya turun di sini", "Saya tunggu di sini", "Saya makan di sini"], answerJa: "ここで降ります", answerId: "Saya turun di sini", explanationJa: "turun = 降りる、di sini = ここで。", explanationId: "turun = turun, di sini = di sini." },
-      { id: "t3", promptJa: "sudah のニュアンスは？", promptId: "Apa arti “予約しています”?", choicesJa: ["すでに／完了", "まだ", "たぶん"], choicesId: ["Saya sudah reservasi", "Saya belum reservasi", "Mungkin saya reservasi"], answerJa: "すでに／完了", answerId: "Saya sudah reservasi", explanationJa: "sudah は行為が済んでいることを示します。", explanationId: "sudah menunjukkan tindakan sudah selesai." },
+      { id: "t3", promptJa: "「予約しています」をインドネシア語に訳してください。", promptId: "Apa arti “予約しています”?", choicesJa: ["予約しています", "まだ予約していません", "予約するかもしれません"], choicesId: ["Saya sudah reservasi", "Saya belum reservasi", "Mungkin saya reservasi"], answerJa: "予約しています", answerId: "Saya sudah reservasi", explanationJa: "sudah は行為が済んでいることを示します。", explanationId: "sudah menunjukkan tindakan sudah selesai." },
     ],
   },
   {
@@ -165,10 +165,17 @@ export const foundationLessons: Lesson[] = [
     quiz: [
       { id: "c1", promptJa: "丁寧に「もう一度」と頼むには？", promptId: "Apa arti “Tolong ulangi sekali lagi”?", choicesJa: ["もう一度お願いします", "もう終わりました", "少し待ちます"], choicesId: ["Tolong ulangi sekali lagi", "Sudah selesai", "Tunggu sebentar"], answerJa: "もう一度お願いします", answerId: "Tolong ulangi sekali lagi", explanationJa: "tolong は依頼を丁寧にする語。", explanationId: "tolong membuat permintaan lebih sopan." },
       { id: "c2", promptJa: "Apa maksudnya? は？", promptId: "Bagaimana mengatakan “どういう意味ですか？”?", choicesJa: ["どういう意味ですか？", "どこへ行きますか？", "何時ですか？"], choicesId: ["Apa maksudnya?", "Mau ke mana?", "Jam berapa?"], answerJa: "どういう意味ですか？", answerId: "Apa maksudnya?", explanationJa: "maksud は意味・意図。", explanationId: "maksud berarti arti atau maksud." },
-      { id: "c3", promptJa: "理由を導く karena は？", promptId: "Kata untuk memperkenalkan alasan?", choicesJa: ["〜なので／なぜなら", "しかし", "そして"], choicesId: ["karena", "tetapi", "dan"], answerJa: "〜なので／なぜなら", answerId: "karena", explanationJa: "karena は理由を導きます。", explanationId: "karena memperkenalkan alasan." },
+      { id: "c3", promptJa: "理由を導く karena は？", promptId: "Kata untuk memperkenalkan alasan?", choicesJa: ["〜なので", "しかし", "そして"], choicesId: ["karena", "tetapi", "dan"], answerJa: "〜なので", answerId: "karena", explanationJa: "karena は理由を導きます。", explanationId: "karena memperkenalkan alasan." },
     ],
   },
 ];
+
+// Every legacy quiz pair is a translation task; do not ask about word order
+// while presenting translation choices or showing the answer in the prompt.
+for (const lesson of foundationLessons) for (const q of lesson.quiz) {
+ q.promptJa = `「${q.answerJa}」をインドネシア語に訳してください。`;
+ q.promptId = `Terjemahkan “${q.answerId}” ke bahasa Jepang.`;
+}
 
 export const lessons: Lesson[] = [...foundationLessons, ...expandedLessons, ...extendedLessons, ...scenarioLessons].sort((a, b) => a.level.slice(0, 2).localeCompare(b.level.slice(0, 2)));
 

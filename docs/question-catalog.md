@@ -14,7 +14,7 @@ Dalam bahasa Jepang, ungkapan perkenalan berubah menurut tingkat kesopanan. Mula
 
 ### g1
 
-**JA → ID:** 「おはようございます」は？
+**JA → ID:** 「おはようございます」をインドネシア語に訳してください。
 
 - Selamat pagi ✓
 - Selamat malam
@@ -22,7 +22,7 @@ Dalam bahasa Jepang, ungkapan perkenalan berubah menurut tingkat kesopanan. Mula
 
 pagi は「朝」。selamat pagi で朝のあいさつです。
 
-**ID → JA:** Apa arti “Selamat pagi”?
+**ID → JA:** Terjemahkan “Selamat pagi” ke bahasa Jepang.
 
 - おはようございます ✓
 - こんばんは
@@ -32,7 +32,7 @@ pagi berarti pagi; selamat pagi adalah salam pagi.
 
 ### g2
 
-**JA → ID:** 「私の名前はティニです」は？
+**JA → ID:** 「私の名前はティニです」をインドネシア語に訳してください。
 
 - Nama saya Tini ✓
 - Nama saya Taro
@@ -40,7 +40,7 @@ pagi berarti pagi; selamat pagi adalah salam pagi.
 
 nama = 名前、saya = 私。Nama saya Tini で「私の名前はティニです」。
 
-**ID → JA:** Apa arti “Nama saya Tini”?
+**ID → JA:** Terjemahkan “Nama saya Tini” ke bahasa Jepang.
 
 - 私の名前はティニです ✓
 - 私の名前は太郎です
@@ -50,7 +50,7 @@ nama = 名前、saya = 私。Nama saya Tini で「私の名前はティニです
 
 ### g3
 
-**JA → ID:** 「日本から来ました」は？
+**JA → ID:** 「日本から来ました」をインドネシア語に訳してください。
 
 - Saya dari Jepang ✓
 - Saya ke Jepang
@@ -58,7 +58,7 @@ nama = 名前、saya = 私。Nama saya Tini で「私の名前はティニです
 
 dari は「〜から」。
 
-**ID → JA:** Apa arti “Saya dari Jepang”?
+**ID → JA:** Terjemahkan “Saya dari Jepang” ke bahasa Jepang.
 
 - 日本から来ました ✓
 - 日本へ行きます
@@ -76,7 +76,7 @@ Bahasa Jepang pada dasarnya memakai pola SOV. Partikel seperti は dan を menan
 
 ### s1
 
-**JA → ID:** Saya minum kopi の語順は？
+**JA → ID:** 「私はコーヒーを飲みます」をインドネシア語に訳してください。
 
 - Saya minum kopi ✓
 - Saya kopi minum
@@ -84,7 +84,7 @@ Bahasa Jepang pada dasarnya memakai pola SOV. Partikel seperti は dan を menan
 
 インドネシア語は SVO、日本語は SOV が基本。
 
-**ID → JA:** Urutan “私はコーヒーを飲みます” dalam bahasa Jepang?
+**ID → JA:** Terjemahkan “Saya minum kopi” ke bahasa Jepang.
 
 - 私はコーヒーを飲みます ✓
 - 私は飲みますコーヒーを
@@ -94,7 +94,7 @@ Indonesia memakai SVO, Jepang memakai SOV.
 
 ### s2
 
-**JA → ID:** 「彼は本を読みます」は？
+**JA → ID:** 「彼は本を読みます」をインドネシア語に訳してください。
 
 - Dia membaca buku ✓
 - Dia menulis buku
@@ -102,7 +102,7 @@ Indonesia memakai SVO, Jepang memakai SOV.
 
 membaca = 読む。
 
-**ID → JA:** Apa arti “Dia membaca buku”?
+**ID → JA:** Terjemahkan “Dia membaca buku” ke bahasa Jepang.
 
 - 彼は本を読みます ✓
 - 彼は本を書きます
@@ -112,7 +112,7 @@ membaca berarti membaca.
 
 ### s3
 
-**JA → ID:** 「これは私の本です」は？
+**JA → ID:** 「これは私の本です」をインドネシア語に訳してください。
 
 - Ini buku saya ✓
 - Ini buku Anda
@@ -120,7 +120,7 @@ membaca berarti membaca.
 
 buku saya = 私の本。所有者が後ろです。
 
-**ID → JA:** Apa arti “Ini buku saya”?
+**ID → JA:** Terjemahkan “Ini buku saya” ke bahasa Jepang.
 
 - これは私の本です ✓
 - これはあなたの本です
@@ -138,7 +138,7 @@ Dalam bahasa Jepang, angka berubah bunyi pada beberapa penghitung. Untuk tahap a
 
 ### n1
 
-**JA → ID:** 値段を聞く表現は？
+**JA → ID:** 「これはいくらですか？」をインドネシア語に訳してください。
 
 - Berapa harganya? ✓
 - Jam berapa?
@@ -146,7 +146,7 @@ Dalam bahasa Jepang, angka berubah bunyi pada beberapa penghitung. Untuk tahap a
 
 harga は値段。harganya で「その値段」。
 
-**ID → JA:** Bagaimana mengatakan “これはいくらですか？”?
+**ID → JA:** Terjemahkan “Berapa harganya?” ke bahasa Jepang.
 
 - これはいくらですか？ ✓
 - これは何時ですか？
@@ -156,7 +156,7 @@ harga berarti harga; berapa harganya menanyakan harga.
 
 ### n2
 
-**JA → ID:** Jam tiga は？
+**JA → ID:** 「三時です」をインドネシア語に訳してください。
 
 - Jam tiga ✓
 - Tiga hari
@@ -164,7 +164,7 @@ harga berarti harga; berapa harganya menanyakan harga.
 
 jam は時刻・時間。
 
-**ID → JA:** Apa arti “三時です”?
+**ID → JA:** Terjemahkan “Jam tiga” ke bahasa Jepang.
 
 - 三時です ✓
 - 三日です
@@ -174,7 +174,7 @@ jam dipakai untuk menyatakan waktu/jam.
 
 ### n3
 
-**JA → ID:** ribu の意味は？
+**JA → ID:** 「二万ルピア」をインドネシア語に訳してください。
 
 - Dua puluh ribu rupiah ✓
 - Dua ratus rupiah
@@ -182,11 +182,11 @@ jam dipakai untuk menyatakan waktu/jam.
 
 ribu は千。dua puluh ribu = 20,000。
 
-**ID → JA:** Apa arti “二万ルピア”?
+**ID → JA:** Terjemahkan “Dua puluh ribu rupiah” ke bahasa Jepang.
 
-- 千 ✓
-- 百
-- 十
+- 二万ルピア ✓
+- 二百ルピア
+- 二十ルピア
 
 ribu berarti seribu; dua puluh ribu = 20.000.
 
@@ -200,7 +200,7 @@ Dalam bahasa Jepang, waktu sering ditandai に, sedangkan lokasi kegiatan memaka
 
 ### d1
 
-**JA → ID:** setiap pagi は？
+**JA → ID:** 「毎朝」をインドネシア語に訳してください。
 
 - setiap pagi ✓
 - setiap malam
@@ -208,7 +208,7 @@ Dalam bahasa Jepang, waktu sering ditandai に, sedangkan lokasi kegiatan memaka
 
 setiap = 毎、pagi = 朝。
 
-**ID → JA:** Apa arti “毎朝”?
+**ID → JA:** Terjemahkan “setiap pagi” ke bahasa Jepang.
 
 - 毎朝 ✓
 - 毎晩
@@ -218,7 +218,7 @@ setiap = setiap, pagi = pagi.
 
 ### d2
 
-**JA → ID:** 「会社で働きます」は？
+**JA → ID:** 「会社で働きます」をインドネシア語に訳してください。
 
 - Saya bekerja di kantor ✓
 - Saya pergi ke kantor
@@ -226,7 +226,7 @@ setiap = setiap, pagi = pagi.
 
 bekerja = 働く、di kantor = 会社で。
 
-**ID → JA:** Apa arti “Saya bekerja di kantor”?
+**ID → JA:** Terjemahkan “Saya bekerja di kantor” ke bahasa Jepang.
 
 - 会社で働きます ✓
 - 会社へ行きます
@@ -236,7 +236,7 @@ bekerja berarti bekerja; di kantor menunjukkan lokasi.
 
 ### d3
 
-**JA → ID:** 「夜に勉強します」は？
+**JA → ID:** 「夜に勉強します」をインドネシア語に訳してください。
 
 - Malam hari saya belajar ✓
 - Pagi hari saya belajar
@@ -244,7 +244,7 @@ bekerja berarti bekerja; di kantor menunjukkan lokasi.
 
 malam hari = 夜、belajar = 勉強する。
 
-**ID → JA:** Apa arti “夜に勉強します”?
+**ID → JA:** Terjemahkan “Malam hari saya belajar” ke bahasa Jepang.
 
 - 夜に勉強します ✓
 - 朝に勉強します
@@ -16722,7 +16722,7 @@ Dalam bahasa Jepang, どこですか, ここで, 予約しています adalah po
 
 ### t1
 
-**JA → ID:** 「駅はどこですか？」は？
+**JA → ID:** 「駅はどこですか？」をインドネシア語に訳してください。
 
 - Stasiun di mana? ✓
 - Stasiun jauh?
@@ -16730,7 +16730,7 @@ Dalam bahasa Jepang, どこですか, ここで, 予約しています adalah po
 
 di mana は場所を尋ねる表現。
 
-**ID → JA:** Apa arti “Stasiun di mana?”
+**ID → JA:** Terjemahkan “Stasiun di mana?” ke bahasa Jepang.
 
 - 駅はどこですか？ ✓
 - 駅は遠いですか？
@@ -16740,7 +16740,7 @@ di mana dipakai untuk menanyakan lokasi.
 
 ### t2
 
-**JA → ID:** 「ここで降ります」は？
+**JA → ID:** 「ここで降ります」をインドネシア語に訳してください。
 
 - Saya turun di sini ✓
 - Saya tunggu di sini
@@ -16748,7 +16748,7 @@ di mana dipakai untuk menanyakan lokasi.
 
 turun = 降りる、di sini = ここで。
 
-**ID → JA:** Apa arti “Saya turun di sini”?
+**ID → JA:** Terjemahkan “Saya turun di sini” ke bahasa Jepang.
 
 - ここで降ります ✓
 - ここで待ちます
@@ -16758,7 +16758,7 @@ turun = turun, di sini = di sini.
 
 ### t3
 
-**JA → ID:** sudah のニュアンスは？
+**JA → ID:** 「予約しています」をインドネシア語に訳してください。
 
 - Saya sudah reservasi ✓
 - Saya belum reservasi
@@ -16766,11 +16766,11 @@ turun = turun, di sini = di sini.
 
 sudah は行為が済んでいることを示します。
 
-**ID → JA:** Apa arti “予約しています”?
+**ID → JA:** Terjemahkan “Saya sudah reservasi” ke bahasa Jepang.
 
-- すでに／完了 ✓
-- まだ
-- たぶん
+- 予約しています ✓
+- まだ予約していません
+- 予約するかもしれません
 
 sudah menunjukkan tindakan sudah selesai.
 
@@ -16784,7 +16784,7 @@ Dalam bahasa Jepang, permintaan sopan memakai お願いします, klarifikasi me
 
 ### c1
 
-**JA → ID:** 丁寧に「もう一度」と頼むには？
+**JA → ID:** 「もう一度お願いします」をインドネシア語に訳してください。
 
 - Tolong ulangi sekali lagi ✓
 - Sudah selesai
@@ -16792,7 +16792,7 @@ Dalam bahasa Jepang, permintaan sopan memakai お願いします, klarifikasi me
 
 tolong は依頼を丁寧にする語。
 
-**ID → JA:** Apa arti “Tolong ulangi sekali lagi”?
+**ID → JA:** Terjemahkan “Tolong ulangi sekali lagi” ke bahasa Jepang.
 
 - もう一度お願いします ✓
 - もう終わりました
@@ -16802,7 +16802,7 @@ tolong membuat permintaan lebih sopan.
 
 ### c2
 
-**JA → ID:** Apa maksudnya? は？
+**JA → ID:** 「どういう意味ですか？」をインドネシア語に訳してください。
 
 - Apa maksudnya? ✓
 - Mau ke mana?
@@ -16810,7 +16810,7 @@ tolong membuat permintaan lebih sopan.
 
 maksud は意味・意図。
 
-**ID → JA:** Bagaimana mengatakan “どういう意味ですか？”?
+**ID → JA:** Terjemahkan “Apa maksudnya?” ke bahasa Jepang.
 
 - どういう意味ですか？ ✓
 - どこへ行きますか？
@@ -16820,7 +16820,7 @@ maksud berarti arti atau maksud.
 
 ### c3
 
-**JA → ID:** 理由を導く karena は？
+**JA → ID:** 「〜なので」をインドネシア語に訳してください。
 
 - karena ✓
 - tetapi
@@ -16828,9 +16828,9 @@ maksud berarti arti atau maksud.
 
 karena は理由を導きます。
 
-**ID → JA:** Kata untuk memperkenalkan alasan?
+**ID → JA:** Terjemahkan “karena” ke bahasa Jepang.
 
-- 〜なので／なぜなら ✓
+- 〜なので ✓
 - しかし
 - そして
 
