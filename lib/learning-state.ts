@@ -27,6 +27,7 @@ export type LearningState = {
   stats: LearningStats;
   reviews: ReviewItem[];
   lessonScores: Record<string, number>;
+  daily?: { date: string; answered: number; correct: number; goal: number };
 };
 
 const KEY = "jendy:learning-state:v1";
@@ -48,7 +49,7 @@ export function createEmptyLearningState(): LearningState {
   return { stats: { ...initialState.stats }, reviews: [], lessonScores: {} };
 }
 
-function localDateKey(date = new Date()) {
+export function localDateKey(date = new Date()) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 
@@ -68,6 +69,7 @@ export function loadLearningState(): LearningState {
       stats: { ...initialState.stats, ...(parsed.stats ?? {}) },
       reviews: Array.isArray(parsed.reviews) ? parsed.reviews : [],
       lessonScores: parsed.lessonScores ?? {},
+      daily: parsed.daily && typeof parsed.daily.date === "string" && Number.isSafeInteger(parsed.daily.answered) && parsed.daily.answered >= 0 && Number.isSafeInteger(parsed.daily.correct) && parsed.daily.correct >= 0 && parsed.daily.correct <= parsed.daily.answered && [6,12,24].includes(parsed.daily.goal) ? parsed.daily : undefined,
     };
   } catch {
     return initialState;
@@ -102,9 +104,11 @@ export function touchStudyDay(state: LearningState): LearningState {
 }
 
 export function recordAnswer(state: LearningState, correct: boolean): LearningState {
+  const daily = dailyProgress(state);
   const touched = touchStudyDay(state);
   return {
     ...touched,
+    daily: { ...daily, answered: daily.answered + 1, correct: daily.correct + Number(correct) },
     stats: {
       ...touched.stats,
       answered: touched.stats.answered + 1,
@@ -212,3 +216,21 @@ export function dueReviews(state: LearningState, direction?: Direction) {
   });
 }
 
+
+export function dailyProgress(state: LearningState) {
+  const date = localDateKey();
+  return state.daily?.date === date ? state.daily : { date, answered: 0, correct: 0, goal: state.daily?.goal ?? 12 };
+}
+export function setDailyGoal(state: LearningState, goal: number): LearningState {
+  return [6, 12, 24].includes(goal) ? { ...state, daily: { ...dailyProgress(state), goal } } : state;
+}
+// One successful interval extension per day, even when a sentence repeats in a lesson.
+export function scheduleLessonReview(state: LearningState, input: Pick<ReviewItem, 'lessonId' | 'phraseIndex' | 'direction'>, correct: boolean): LearningState {
+  const updated = upsertReviewItem(state, input);
+  const key = `${input.direction}:${input.lessonId}:${input.phraseIndex}`;
+  const item = updated.reviews.find(review => review.key === key)!;
+  if (correct && item.repetitions > 0 && localDateKey(new Date(item.lastReviewedAt)) === localDateKey()) return updated;
+  const graded = gradeReview(updated, key, correct ? 'good' : 'again');
+  // The answer already earned XP; scheduling is not a second activity.
+  return { ...graded, stats: updated.stats };
+}

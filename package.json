@@ -7,16 +7,18 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "node tests/run.cjs && node tests/game.cjs && node tests/lesson-flow.cjs && node tests/mixed-exercises.cjs && node tests/sound-effects.cjs && node tests/speaking-listening.cjs && node tests/lesson-session.cjs",
+    "test": "node tests/run.cjs && node tests/game.cjs && node tests/lesson-flow.cjs && node tests/mixed-exercises.cjs && node tests/sound-effects.cjs && node tests/speaking-listening.cjs && node tests/lesson-session.cjs && node tests/release-learning.cjs",
     "content:export": "node scripts/export-course.cjs",
     "test:routes": "node tests/routes.cjs",
     "test:browser": "node tests/browser.cjs"
   },
   "dependencies": {
+    "@orama/stemmers": "3.1.18",
     "@supabase/supabase-js": "2.118.0",
     "next": "16.4.3",
     "react": "19.3.1",
-    "react-dom": "19.3.1"
+    "react-dom": "19.3.1",
+    "wanakana": "5.3.1"
   },
   "devDependencies": {
     "@types/node": "24.10.0",
