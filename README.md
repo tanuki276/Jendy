@@ -4,6 +4,17 @@
 
 日本語とインドネシア語の違いから、文の構造・語感・使いどころを学ぶ双方向サービスです。
 
+## Daily learning workspace
+
+The home screen resumes the next unfinished lesson directly and previews the current six-lesson stage. Desktop navigation and a mobile bottom bar share the same learning routes; the mobile account menu also exposes the dictionary and grammar pages. Both learning directions have translated labels, and the document language follows the selected direction.
+
+- Daily goals of 6, 12, or 24 answered questions are saved on the device. Lesson/practice answers and graded review cards count toward the goal; completion bonuses add XP without adding answers.
+- A weekly calendar shows recorded study days. Current streaks expire after a missed day, while the longest recorded streak preserves the three-day achievement.
+- Four badges reflect actual progress: a completed lesson, three consecutive study days, 100 lesson/practice answers, and 1,000 XP. Lesson results show the XP earned during that attempt, including completion bonuses and mistake repair.
+- Existing progress is migrated without inventing historical daily totals. Daily activity retains the most recent 180 recorded dates. Goals, activity, and badges remain device-local; this change does not expand cloud synchronization.
+
+Validation includes the existing content and interaction suites, daily-goal controls, migration, date rollover, streak expiry, persistent achievements, TypeScript, production build, and all eight page-render checks. Production HTML and client bundles were also inspected in Chromium at desktop and 360/390px iframe widths, including home-to-lesson answering and both UI languages. Live authentication, microphone recognition, and the server audio endpoint still require deployment/device validation.
+
 ## Pages
 
 | URL | Purpose |

@@ -3,6 +3,7 @@ import "./globals.css";
 import "./learning.css";
 import "./insights.css";
 import "./sakura.css";
+import "./experience.css";
 
 export const metadata: Metadata = {
   title: "Jendy | 訳の先の「なぜ？」まで",

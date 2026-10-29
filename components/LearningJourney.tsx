@@ -1,11 +1,164 @@
 "use client";
-import { useState } from 'react';
-import Link from 'next/link';
-import { lessons, type Lesson, type Direction } from '@/lib/learning-content';
-import { StageSeal, CultureBanner } from './CultureArt';
-export function LearningJourney({direction,completed,onStart,xp,streak}:{direction:Direction;completed:Set<string>;onStart:(lesson:Lesson)=>void;xp:number;streak:number}) {
- const ja=direction==='ja-id';const next=lessons.find(l=>!completed.has(l.id))??lessons[0];
- const recommended=Math.floor(lessons.indexOf(next)/6);const [selected,setSelected]=useState<number|null>(null);const stage=selected??recommended;
- const batch=lessons.slice(stage*6,stage*6+6);const done=batch.filter(l=>completed.has(l.id)).length;
- return <div className="journey-layout"><div className="journey-main"><div className="journey-resume"><span>{ja?'今日も、一歩ずつ。':'Satu langkah lagi hari ini.'}</span><h2>{ja?next.titleJa:next.titleId}</h2><p>{ja?'選んで、組み立てて、聞いて、使う。':'Pilih, susun, dengarkan, lalu gunakan.'}</p><button className="primary-button" onClick={()=>onStart(next)}>{ja?'学習を続ける':'Lanjut belajar'} →</button></div><CultureBanner compact/><div className="journey-unit"><div><small>STAGE {stage+1} / {Math.ceil(lessons.length/6)}</small><h2>{ja?batch[0].titleJa:batch[0].titleId}</h2><span>{done} / {batch.length} {ja?'レッスン完了':'pelajaran selesai'}</span></div><label>{ja?'ステージを選ぶ':'Pilih tahap'}<select value={stage} onChange={e=>setSelected(Number(e.target.value))}>{Array.from({length:Math.ceil(lessons.length/6)},(_,i)=><option key={i} value={i}>Stage {i+1}</option>)}</select></label></div><ol className="journey-nodes">{batch.map((lesson,i)=><li key={lesson.id} className={`${completed.has(lesson.id)?'is-complete':''} ${lesson.id===next.id?'is-current':''}`}><button onClick={()=>onStart(lesson)} aria-label={`${ja?lesson.titleJa:lesson.titleId} · ${completed.has(lesson.id)?(ja?'復習':'Ulangi'):(ja?'開始':'Mulai')}`}><StageSeal number={i+1} done={completed.has(lesson.id)?1:0} total={1}/></button><div><small>{lesson.level} · {lesson.quiz.length} {ja?'問':'soal'}</small><strong>{ja?lesson.titleJa:lesson.titleId}</strong><span>{completed.has(lesson.id)?(ja?'クリア！もう一度練習':'Selesai! Ulangi lagi'):lesson.id===next.id?(ja?'ここからスタート':'Mulai di sini'):(ja?'いつでも挑戦できます':'Bisa dimulai kapan saja')}</span></div></li>)}</ol><div className="journey-paging"><button className="outline-button" disabled={stage===0} onClick={()=>setSelected(stage-1)}>← {ja?'前のステージ':'Sebelumnya'}</button><button className="outline-button" disabled={(stage+1)*6>=lessons.length} onClick={()=>setSelected(stage+1)}>{ja?'次のステージ':'Berikutnya'} →</button></div></div><aside className="journey-side"><div className="journey-stats"><strong>{streak}<small>{ja?'日連続':'hari beruntun'}</small></strong><strong>{xp}<small>XP</small></strong></div><h3>{ja?'あなたのペースで、何度でも。':'Belajar sesuai ritmemu.'}</h3><p>{ja?'間違えても回数制限なし。理由を確認して、もう一度。':'Tanpa batas percobaan. Pahami alasannya, lalu coba lagi.'}</p><Link href="/review">{ja?'覚えた表現を復習':'Ulangi ungkapan'} →</Link><Link href="/study">{ja?'文法・例文を調べる':'Baca contoh dan tata bahasa'} →</Link><Link href="/practice">{ja?'語順クエストで練習':'Latihan susun kata'} →</Link></aside></div>
+import { useState } from "react";
+import Link from "next/link";
+import { lessons, type Lesson, type Direction } from "@/lib/learning-content";
+import { CultureBanner } from "./CultureArt";
+import { Icon } from "./Icon";
+export function LearningJourney({
+  direction,
+  completed,
+  onStart,
+  xp,
+  streak,
+}: {
+  direction: Direction;
+  completed: Set<string>;
+  onStart: (lesson: Lesson) => void;
+  xp: number;
+  streak: number;
+}) {
+  const ja = direction === "ja-id";
+  const next = lessons.find((l) => !completed.has(l.id)) ?? lessons[0];
+  const recommended = Math.floor(lessons.indexOf(next) / 6);
+  const [selected, setSelected] = useState<number | null>(null);
+  const stage = selected ?? recommended;
+  const batch = lessons.slice(stage * 6, stage * 6 + 6);
+  const done = batch.filter((l) => completed.has(l.id)).length;
+  return (
+    <div className="journey-layout">
+      <div className="journey-main">
+        <div className="journey-resume">
+          <span>
+            {ja ? "今日も、一歩ずつ。" : "Satu langkah lagi hari ini."}
+          </span>
+          <h2>{ja ? next.titleJa : next.titleId}</h2>
+          <p>
+            {ja
+              ? "選んで、組み立てて、聞いて、使う。"
+              : "Pilih, susun, dengarkan, lalu gunakan."}
+          </p>
+          <button className="primary-button" onClick={() => onStart(next)}>
+            {ja ? "学習を続ける" : "Lanjut belajar"} →
+          </button>
+        </div>
+        <CultureBanner compact />
+        <div className="journey-unit">
+          <div>
+            <small>
+              STAGE {stage + 1} / {Math.ceil(lessons.length / 6)}
+            </small>
+            <h2>{ja ? batch[0].titleJa : batch[0].titleId}</h2>
+            <span>
+              {done} / {batch.length}{" "}
+              {ja ? "レッスン完了" : "pelajaran selesai"}
+            </span>
+          </div>
+          <label>
+            {ja ? "ステージを選ぶ" : "Pilih tahap"}
+            <select
+              value={stage}
+              onChange={(e) => setSelected(Number(e.target.value))}
+            >
+              {Array.from({ length: Math.ceil(lessons.length / 6) }, (_, i) => (
+                <option key={i} value={i}>
+                  Stage {i + 1}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <ol className="journey-nodes">
+          {batch.map((lesson, i) => (
+            <li
+              key={lesson.id}
+              className={`${completed.has(lesson.id) ? "is-complete" : ""} ${lesson.id === next.id ? "is-current" : ""}`}
+            >
+              <button
+                aria-current={lesson.id === next.id ? "step" : undefined}
+                onClick={() => onStart(lesson)}
+                aria-label={`${ja ? lesson.titleJa : lesson.titleId} · ${completed.has(lesson.id) ? (ja ? "復習" : "Ulangi") : ja ? "開始" : "Mulai"}`}
+              >
+                <span className="path-icon">
+                  <Icon
+                    name={
+                      completed.has(lesson.id)
+                        ? "check"
+                        : i === 5
+                          ? "trophy"
+                          : "star"
+                    }
+                    size={32}
+                  />
+                </span>
+              </button>
+              <div>
+                <small>
+                  {lesson.level} · {12} {ja ? "問" : "soal"}
+                </small>
+                <strong>{ja ? lesson.titleJa : lesson.titleId}</strong>
+                <span>
+                  {completed.has(lesson.id)
+                    ? ja
+                      ? "クリア！もう一度練習"
+                      : "Selesai! Ulangi lagi"
+                    : lesson.id === next.id
+                      ? ja
+                        ? "ここからスタート"
+                        : "Mulai di sini"
+                      : ja
+                        ? "いつでも挑戦できます"
+                        : "Bisa dimulai kapan saja"}
+                </span>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <div className="journey-paging">
+          <button
+            className="outline-button"
+            disabled={stage === 0}
+            onClick={() => setSelected(stage - 1)}
+          >
+            ← {ja ? "前のステージ" : "Sebelumnya"}
+          </button>
+          <button
+            className="outline-button"
+            disabled={(stage + 1) * 6 >= lessons.length}
+            onClick={() => setSelected(stage + 1)}
+          >
+            {ja ? "次のステージ" : "Berikutnya"} →
+          </button>
+        </div>
+      </div>
+      <aside className="journey-side">
+        <div className="journey-stats">
+          <strong>
+            {streak}
+            <small>{ja ? "日連続" : "hari beruntun"}</small>
+          </strong>
+          <strong>
+            {xp}
+            <small>XP</small>
+          </strong>
+        </div>
+        <h3>
+          {ja ? "あなたのペースで、何度でも。" : "Belajar sesuai ritmemu."}
+        </h3>
+        <p>
+          {ja
+            ? "間違えても回数制限なし。理由を確認して、もう一度。"
+            : "Tanpa batas percobaan. Pahami alasannya, lalu coba lagi."}
+        </p>
+        <Link href="/review">
+          {ja ? "覚えた表現を復習" : "Ulangi ungkapan"} →
+        </Link>
+        <Link href="/study">
+          {ja ? "文法・例文を調べる" : "Baca contoh dan tata bahasa"} →
+        </Link>
+        <Link href="/practice">
+          {ja ? "語順クエストで練習" : "Latihan susun kata"} →
+        </Link>
+      </aside>
+    </div>
+  );
 }
