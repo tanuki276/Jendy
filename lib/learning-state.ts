@@ -17,6 +17,7 @@ export type ReviewItem = {
 export type LearningStats = {
   xp: number;
   streak: number;
+  longestStreak: number;
   lastStudyDate: string | null;
   answered: number;
   correct: number;
@@ -27,6 +28,8 @@ export type LearningState = {
   stats: LearningStats;
   reviews: ReviewItem[];
   lessonScores: Record<string, number>;
+  dailyGoal: number;
+  activity: Record<string, { answered: number; xp: number }>;
 };
 
 const KEY = "jendy:learning-state:v1";
@@ -35,6 +38,7 @@ const initialState: LearningState = {
   stats: {
     xp: 0,
     streak: 0,
+    longestStreak: 0,
     lastStudyDate: null,
     answered: 0,
     correct: 0,
@@ -42,13 +46,21 @@ const initialState: LearningState = {
   },
   reviews: [],
   lessonScores: {},
+  dailyGoal: 12,
+  activity: {},
 };
 
 export function createEmptyLearningState(): LearningState {
-  return { stats: { ...initialState.stats }, reviews: [], lessonScores: {} };
+  return {
+    stats: { ...initialState.stats },
+    reviews: [],
+    lessonScores: {},
+    dailyGoal: 12,
+    activity: {},
+  };
 }
 
-function localDateKey(date = new Date()) {
+export function localDateKey(date = new Date()) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 
@@ -62,16 +74,75 @@ export function loadLearningState(): LearningState {
   if (typeof window === "undefined") return initialState;
   try {
     const raw = window.localStorage.getItem(KEY);
-    if (!raw) return initialState;
+    if (!raw) return createEmptyLearningState();
     const parsed = JSON.parse(raw) as Partial<LearningState>;
     return {
-      stats: { ...initialState.stats, ...(parsed.stats ?? {}) },
+      stats: {
+        ...initialState.stats,
+        ...(parsed.stats ?? {}),
+        longestStreak: Math.max(
+          parsed.stats?.longestStreak ?? 0,
+          parsed.stats?.streak ?? 0,
+        ),
+      },
       reviews: Array.isArray(parsed.reviews) ? parsed.reviews : [],
       lessonScores: parsed.lessonScores ?? {},
+      dailyGoal: [6, 12, 24].includes(parsed.dailyGoal ?? 0)
+        ? parsed.dailyGoal!
+        : 12,
+      activity: sanitizeActivity(parsed.activity),
     };
   } catch {
     return initialState;
   }
+}
+
+function sanitizeActivity(value: unknown): LearningState["activity"] {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  return Object.fromEntries(
+    Object.entries(value)
+      .filter(
+        ([day, entry]) =>
+          /^\d{4}-\d{2}-\d{2}$/.test(day) &&
+          entry &&
+          typeof entry === "object" &&
+          Number.isSafeInteger(entry.answered) &&
+          entry.answered >= 0 &&
+          Number.isSafeInteger(entry.xp) &&
+          entry.xp >= 0,
+      )
+      .sort(([a], [b]) => a.localeCompare(b))
+      .slice(-180),
+  );
+}
+
+/** Keep historical streaks in storage; only show a current streak until yesterday. */
+export function currentStreak(state: LearningState, now = new Date()): number {
+  const last = state.stats.lastStudyDate;
+  if (!last) return 0;
+  const days = dayDiff(last, localDateKey(now));
+  return days >= 0 && days <= 1 ? state.stats.streak : 0;
+}
+
+function recordActivity(
+  state: LearningState,
+  answered: number,
+  xp: number,
+): LearningState {
+  const today = localDateKey();
+  const previous = state.activity?.[today] ?? { answered: 0, xp: 0 };
+  const activity = {
+    ...state.activity,
+    [today]: { answered: previous.answered + answered, xp: previous.xp + xp },
+  };
+  return {
+    ...state,
+    activity: Object.fromEntries(
+      Object.entries(activity)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .slice(-180),
+    ),
+  };
 }
 
 export function saveLearningState(state: LearningState) {
@@ -89,20 +160,28 @@ export function touchStudyDay(state: LearningState): LearningState {
   if (previous === today) return state;
 
   let streak = 1;
-  if (previous && dayDiff(previous, today) === 1) streak = state.stats.streak + 1;
+  if (previous && dayDiff(previous, today) === 1)
+    streak = state.stats.streak + 1;
 
   return {
     ...state,
     stats: {
       ...state.stats,
       streak,
+      longestStreak: Math.max(
+        state.stats.longestStreak ?? state.stats.streak,
+        streak,
+      ),
       lastStudyDate: today,
     },
   };
 }
 
-export function recordAnswer(state: LearningState, correct: boolean): LearningState {
-  const touched = touchStudyDay(state);
+export function recordAnswer(
+  state: LearningState,
+  correct: boolean,
+): LearningState {
+  const touched = recordActivity(touchStudyDay(state), 1, correct ? 10 : 2);
   return {
     ...touched,
     stats: {
@@ -114,9 +193,17 @@ export function recordAnswer(state: LearningState, correct: boolean): LearningSt
   };
 }
 
-export function recordLessonCompletion(state: LearningState, lessonId: string, score: number): LearningState {
-  const touched = touchStudyDay(state);
-  const alreadyScored = typeof touched.lessonScores[lessonId] === "number";
+export function recordLessonCompletion(
+  state: LearningState,
+  lessonId: string,
+  score: number,
+): LearningState {
+  const alreadyScored = typeof state.lessonScores[lessonId] === "number";
+  const touched = recordActivity(
+    touchStudyDay(state),
+    0,
+    alreadyScored ? 15 : 50,
+  );
   return {
     ...touched,
     lessonScores: {
@@ -126,7 +213,8 @@ export function recordLessonCompletion(state: LearningState, lessonId: string, s
     stats: {
       ...touched.stats,
       xp: touched.stats.xp + (alreadyScored ? 15 : 50),
-      completedLessons: touched.stats.completedLessons + (alreadyScored ? 0 : 1),
+      completedLessons:
+        touched.stats.completedLessons + (alreadyScored ? 0 : 1),
     },
   };
 }
@@ -152,7 +240,12 @@ export function upsertReviewItem(
   return { ...state, reviews: [...state.reviews, item] };
 }
 
-export function gradeReview(state: LearningState, key: string, grade: ReviewGrade): LearningState {
+export function gradeReview(
+  state: LearningState,
+  key: string,
+  grade: ReviewGrade,
+): LearningState {
+  if (!state.reviews.some((item) => item.key === key)) return state;
   const now = new Date();
   const next = state.reviews.map((item) => {
     if (item.key !== key) return item;
@@ -171,10 +264,23 @@ export function gradeReview(state: LearningState, key: string, grade: ReviewGrad
       ease = Math.max(1.3, ease - 0.05);
     } else if (grade === "good") {
       repetitions += 1;
-      intervalDays = repetitions === 1 ? 1 : repetitions === 2 ? 3 : Math.max(4, Math.round(Math.max(1, intervalDays) * ease));
+      intervalDays =
+        repetitions === 1
+          ? 1
+          : repetitions === 2
+            ? 3
+            : Math.max(4, Math.round(Math.max(1, intervalDays) * ease));
     } else {
       repetitions += 1;
-      intervalDays = repetitions === 1 ? 3 : repetitions === 2 ? 7 : Math.max(7, Math.round(Math.max(1, intervalDays) * (ease + 0.35)));
+      intervalDays =
+        repetitions === 1
+          ? 3
+          : repetitions === 2
+            ? 7
+            : Math.max(
+                7,
+                Math.round(Math.max(1, intervalDays) * (ease + 0.35)),
+              );
       ease += 0.08;
     }
 
@@ -192,8 +298,13 @@ export function gradeReview(state: LearningState, key: string, grade: ReviewGrad
     };
   });
 
-  const touched = touchStudyDay(state);
-  const xpByGrade: Record<ReviewGrade, number> = { again: 2, hard: 5, good: 8, easy: 10 };
+  const xpByGrade: Record<ReviewGrade, number> = {
+    again: 2,
+    hard: 5,
+    good: 8,
+    easy: 10,
+  };
+  const touched = recordActivity(touchStudyDay(state), 1, xpByGrade[grade]);
   return {
     ...touched,
     reviews: next,
@@ -211,4 +322,3 @@ export function dueReviews(state: LearningState, direction?: Direction) {
     return new Date(item.dueAt).getTime() <= now;
   });
 }
-

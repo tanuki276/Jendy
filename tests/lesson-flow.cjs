@@ -30,6 +30,7 @@ for(let i=1;i<12;i++){
  click(document.querySelector('.quiz-feedback .next-button'));
 }
 assert.equal(document.querySelector('.result-ring strong').textContent,'100%');
+assert.equal(document.querySelector('.result-xp strong').textContent, '+170');
 const saved=JSON.parse(localStorage.getItem('jendy:learning-state:v1')||'null');
 assert.equal(saved.reviews.filter(r=>r.lessonId===lessons[0].id).length,3);
 // Inspect the actual app storage key rather than requiring the implementation's in-memory state.
